@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const connectDB = require('./utils/db');
 
 const app = express();
 
@@ -49,6 +50,11 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// Start the server
+connectDB().then(() => { // Ensure DB is connected before starting server
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}).catch((err) => {
+  console.error('Failed to start server:', err);  
 });
