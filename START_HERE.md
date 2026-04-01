@@ -6,10 +6,10 @@
 
 ```
 ✅ Full-Stack Project Structure
-   └── Frontend (Next.js) + Backend (Express) + Database (MongoDB)
+   └── Frontend (React \(Vite\)) + Backend (Express) + Database (MongoDB)
 
 ✅ 30+ Files Created Including:
-   ├── Next.js frontend with pages and components
+   ├── React \(Vite\) frontend with pages and components
    ├── Express backend with models and API structure
    ├── 7 comprehensive documentation files
    ├── Environment configuration templates
@@ -19,7 +19,7 @@
 ✅ Development Environment Ready
    ├── npm scripts for concurrent development
    ├── Auto-restarting backend (nodemon)
-   ├── Hot-reloading frontend (Next.js)
+   ├── Hot-reloading frontend (React \(Vite\))
    └── CORS and middleware configured
 
 ✅ Database Ready
@@ -82,9 +82,9 @@ jobify/
 │  ├─ .gitignore              (Git rules)
 │  └─ .git/                   (Git repository)
 │
-├─ 🌐 CLIENT - FRONTEND (Next.js)
+├─ 🌐 CLIENT - FRONTEND (React \(Vite\))
 │  ├─ package.json
-│  ├─ next.config.js
+│  ├─ vite.config.js
 │  ├─ .env.local              ← API_URL configured
 │  ├─ .gitignore
 │  ├─ 📄 pages/
@@ -158,7 +158,7 @@ NODE_ENV=development
 
 **client/.env.local** (Already configured):
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
@@ -179,7 +179,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ## 🎮 WHAT WORKS NOW
 
 ✅ Express server running with basic routes  
-✅ Next.js frontend with hot-reload  
+✅ React \(Vite\) frontend with hot-reload  
 ✅ API health check endpoint functional  
 ✅ Jobs GET/POST endpoints ready  
 ✅ Database schemas defined (User, Job)  
@@ -289,7 +289,7 @@ PORT=5001
 - Check client/.env.local has correct API_URL
 
 ### "Frontend won't load"
-- Verify Next.js builds: `cd client && npm run build`
+- Verify React \(Vite\) builds: `cd client && npm run build`
 - Check browser console for errors
 - Check network tab for API calls
 
@@ -372,3 +372,4 @@ Happy coding! 💻
 *Phase 0: Foundation Setup*  
 *Date: March 31, 2026*  
 *Status: ✅ COMPLETE AND READY*
+

@@ -4,7 +4,7 @@
 
 ### System Foundation Established
 - **Version Control**: Git repository initialized with main/develop branches
-- **Frontend**: Next.js application with hot-reload enabled
+- **Frontend**: React \(Vite\) application with hot-reload enabled
 - **Backend**: Express.js API server with MongoDB connection ready
 - **Database**: MongoDB Atlas integration setup (connection string needed)
 
@@ -19,12 +19,12 @@
 4. **GIT_WORKFLOW.md** - Git branching strategy and workflow
 5. **SETUP_CHECKLIST.md** - Verification checklist for setup
 
-### Frontend (Next.js)
+### Frontend (React \(Vite\))
 - `client/package.json` - Dependencies and scripts
-- `client/next.config.js` - Next.js configuration
+- `client/vite.config.js` - React \(Vite\) configuration
 - `client/.env.local` - Environment variables (API URL)
-- `client/pages/index.js` - Home page with API connection test
-- `client/pages/_app.js` - Next.js app wrapper
+- `client/src/index.js` - Home page with API connection test
+- `client/src/_app.js` - React \(Vite\) app wrapper
 - `client/styles/globals.css` - Global CSS styles
 - `client/.gitignore` - Git ignore rules
 - Directory structure for: components/, public/
@@ -142,9 +142,9 @@ jobify/
 ├── 📄 setup.bat                    ← Windows setup
 ├── 📄 setup.sh                     ← Linux/Mac setup
 │
-├── 📁 client/                      ← FRONTEND (Next.js)
+├── 📁 client/                      ← FRONTEND (React \(Vite\))
 │   ├── 📄 package.json
-│   ├── 📄 next.config.js
+│   ├── 📄 vite.config.js
 │   ├── 📄 .env.local               ← API URL config
 │   ├── 📁 pages/
 │   │   ├── 📄 index.js             ← Home page
@@ -200,8 +200,8 @@ npm run dev
 - Server auto-restarts (nodemon)
 
 **Frontend:**
-- Edit `client/pages/` or `client/components/`
-- Changes auto-reload (Next.js)
+- Edit `client/src/` or `client/components/`
+- Changes auto-reload (React \(Vite\))
 
 ---
 
@@ -287,7 +287,7 @@ npm install
 
 ### "CORS error" (Frontend can't reach Backend)
 - Ensure backend is running on port 5000
-- Check `client/.env.local` has correct `NEXT_PUBLIC_API_URL`
+- Check `client/.env.local` has correct `VITE_API_URL`
 
 ---
 
@@ -305,7 +305,7 @@ npm install
    - Create `server/routes/jobs.js`
    - Create `server/controllers/jobController.js`
    - Create React components in `client/components/`
-   - Create jobs page in `client/pages/jobs.js`
+   - Create jobs page in `client/src/jobs.js`
 
 3. **User Profile**
    - Create user profile page
@@ -335,14 +335,14 @@ NODE_ENV=development
 ### Frontend (`client/.env.local`)
 ```
 # Required
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
 
 ## 🎓 LEARNING RESOURCES
 
-- **Next.js**: https://nextjs.org/docs
+- **React \(Vite\)**: https://react.org/docs
 - **Express.js**: https://expressjs.com/
 - **MongoDB**: https://docs.mongodb.com/
 - **REST API Design**: https://restfulapi.net/
@@ -384,3 +384,4 @@ git checkout -b feature/your-feature-name
 ```
 
 Happy coding! 💻
+

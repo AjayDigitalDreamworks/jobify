@@ -32,13 +32,13 @@
 - [ ] Express server starts without errors
 
 ## Phase 3: Frontend Setup
-- [ ] `client/package.json` created with Next.js
-- [ ] `client/next.config.js` created
-- [ ] `client/pages/index.js` created
+- [ ] `client/package.json` created with React \(Vite\)
+- [ ] `client/vite.config.js` created
+- [ ] `client/src/index.js` created
 - [ ] `client/.env.local` created with API URL
 - [ ] `client/.gitignore` created
 - [ ] Dependencies installed: `cd client && npm install`
-- [ ] Next.js app builds without errors
+- [ ] React \(Vite\) app builds without errors
 
 ## Phase 4: Environment Configuration
 - [ ] `server/.env` has valid MongoDB URI
@@ -150,3 +150,4 @@ If all checkboxes are checked, your development environment is ready! 🎉
 **Developer**: _______________  
 **Environment**: Development  
 **Status**: ✅ READY FOR DEVELOPMENT
+

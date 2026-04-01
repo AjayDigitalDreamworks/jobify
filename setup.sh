@@ -18,7 +18,7 @@ echo "✓ Node.js detected: $(node --version)"
 echo
 
 # Create necessary directories if they don't exist
-mkdir -p client/pages
+mkdir -p client/src
 mkdir -p server
 
 echo "Installing dependencies..."

@@ -19,7 +19,7 @@ echo ✓ Node.js detected
 echo.
 
 REM Create necessary directories if they don't exist
-if not exist "client\pages" mkdir client\pages
+if not exist "client\src" mkdir client\src
 if not exist "server" mkdir server
 
 echo Installing dependencies...

@@ -11,7 +11,7 @@
 ## 🎯 PHASE 0 OBJECTIVES (ALL COMPLETE ✅)
 
 ### ✅ Tech Stack Finalized
-- [x] React/Next.js frontend initialized
+- [x] React \(Vite\) frontend initialized
 - [x] Node.js/Express backend initialized
 - [x] MongoDB Atlas integration configured
 - [x] Environment files set up (.env)
@@ -113,7 +113,7 @@ jobify/
 │
 ├── 🌐 CLIENT (Frontend)
 │   ├── package.json                   [Dependencies]
-│   ├── next.config.js                 [Next.js config]
+│   ├── vite.config.js                 [React \(Vite\) config]
 │   ├── .env.local                     [API URL]
 │   ├── .gitignore                     [Git rules]
 │   │
@@ -243,7 +243,7 @@ API_KEY=your-api-key
 
 ### Client `/client/.env.local`
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
@@ -312,7 +312,7 @@ git push origin feature/feature-name    # Push to remote
 
 ### After Phase 0
 - Creating routes → Follow Express patterns
-- Creating components → Use Next.js best practices
+- Creating components → Use React \(Vite\) best practices
 - Database queries → Use Mongoose methods
 - Authentication → Use JWT + bcryptjs
 
@@ -325,7 +325,7 @@ git push origin feature/feature-name    # Push to remote
 │        PHASE 0 - FOUNDATION STATUS      │
 ├─────────────────────────────────────────┤
 │ Git Repository        ✅ Ready          │
-│ Frontend (Next.js)    ✅ Ready          │
+│ Frontend (React \(Vite\))    ✅ Ready          │
 │ Backend (Express)     ✅ Ready          │
 │ Database (MongoDB)    ✅ Configured     │
 │ Environment Config    ✅ Ready          │
@@ -343,9 +343,9 @@ git push origin feature/feature-name    # Push to remote
 
 ### If you're new to...
 
-**React/Next.js?**
+**React \(Vite\)?**
 - Read: client pages and understand structure
-- Study: NEXT_PUBLIC_API_URL usage
+- Study: VITE_API_URL usage
 - Learn: Pages, components, hooks pattern
 
 **Express/Node.js?**
@@ -377,7 +377,7 @@ git push origin feature/feature-name    # Push to remote
 **A:** Create files in `client/components/` folder.
 
 ### Q: How do I add a new page?
-**A:** Create file in `client/pages/` folder.
+**A:** Create file in `client/src/` folder.
 
 ### Q: Where are database models?
 **A:** In `server/models/` folder (User.js, Job.js).
@@ -427,3 +427,4 @@ npm run dev
 ```
 
 Let's go! 💪
+

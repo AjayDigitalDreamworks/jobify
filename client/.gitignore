@@ -6,9 +6,8 @@
 # Testing
 /coverage
 
-# Next.js
-/.next/
-/out/
+# Vite
+/dist/
 
 # Production
 /build

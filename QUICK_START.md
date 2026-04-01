@@ -41,7 +41,7 @@ Then visit:
 - ✅ Auto-restarts on file changes (nodemon)
 
 ### Frontend (Client)
-- ✅ Next.js running on port 3000
+- ✅ React \(Vite\) running on port 3000
 - ✅ Connected to backend API
 - ✅ Shows health status
 - ✅ Hot-reload enabled
@@ -77,7 +77,7 @@ curl http://localhost:5000/api/health
 
 ```
 jobify/
-├── client/               ← Frontend (Next.js)
+├── client/               ← Frontend (React \(Vite\))
 │   ├── pages/
 │   │   ├── index.js      ← Home page
 │   │   └── _app.js       ← App setup
@@ -85,7 +85,7 @@ jobify/
 │   │   └── globals.css   ← Global styles
 │   ├── .env.local        ← Backend URL
 │   ├── package.json
-│   └── next.config.js
+│   └── vite.config.js
 │
 ├── server/               ← Backend (Express)
 │   ├── models/
@@ -128,7 +128,7 @@ PORT=5001
 
 ### 🚨 "CORS error" (Frontend can't reach Backend)
 - Verify backend is running on 5000
-- Check `client/.env.local` has `NEXT_PUBLIC_API_URL=http://localhost:5000/api`
+- Check `client/.env.local` has `VITE_API_URL=http://localhost:5000/api`
 
 ### 🚨 "Cannot find 'develop' branch"
 ```bash
@@ -141,7 +141,7 @@ git checkout -b develop
 ## Now What? (Next Steps)
 
 ### Option 1: Just Explore
-- Modify `client/pages/index.js` to change homepage
+- Modify `client/src/index.js` to change homepage
 - Server auto-restarts when you change files
 - Frontend hot-reloads automatically
 
@@ -204,7 +204,7 @@ NODE_ENV=development
 
 ### `client/.env.local`
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
@@ -224,3 +224,4 @@ For more details, see:
 - Complete setup: [SETUP_GUIDE.md](SETUP_GUIDE.md)
 - Full docs: [README.md](README.md)
 - Git workflow: [GIT_WORKFLOW.md](GIT_WORKFLOW.md)
+

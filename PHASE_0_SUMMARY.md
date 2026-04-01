@@ -8,11 +8,11 @@ All foundational components for the Jobify job portal are now in place and ready
 
 ## 📦 WHAT'S BEEN CREATED
 
-### 🎨 Frontend (Next.js)
+### 🎨 Frontend (React \(Vite\))
 ```
 client/
-├── ✅ package.json          - Next.js dependencies & scripts
-├── ✅ next.config.js        - Next.js configuration
+├── ✅ package.json          - React \(Vite\) dependencies & scripts
+├── ✅ vite.config.js        - React \(Vite\) configuration
 ├── ✅ .env.local            - API URL configuration
 ├── ✅ .gitignore            - Git ignore rules
 ├── ✅ pages/
@@ -103,7 +103,7 @@ Visit:
 | Component | Status | Details |
 |-----------|--------|---------|
 | **Git Repository** | ✅ Ready | Initialized with main/develop branches |
-| **Frontend Setup** | ✅ Ready | Next.js 14, React 18, hot-reload enabled |
+| **Frontend Setup** | ✅ Ready | React \(Vite\), React 18, hot-reload enabled |
 | **Backend Setup** | ✅ Ready | Express.js, CORS, basic routes working |
 | **Database** | ✅ Ready | MongoDB Atlas integration (needs connection) |
 | **API** | ✅ Ready | Health check, jobs endpoints functional |
@@ -294,7 +294,7 @@ PORT=5001
 ## ✨ WHAT'S WORKING NOW
 
 - ✅ Express server with middleware
-- ✅ Next.js frontend with hot reload
+- ✅ React \(Vite\) frontend with hot reload
 - ✅ API health check endpoint
 - ✅ CSS styling (global + component-ready)
 - ✅ Environment configuration
@@ -345,9 +345,9 @@ server/                 → Backend directory
 .env.local
 .gitignore
 package.json
-next.config.js
-pages/index.js
-pages/_app.js
+vite.config.js
+src/App.jsx
+src/main.jsx
 styles/globals.css
 components/, public/ (empty, ready for content)
 ```
@@ -390,3 +390,4 @@ Ready for Phase 1 development!
 *Last Updated: March 31, 2026*  
 *Project: Jobify - Job Portal Application*  
 *Version: 1.0.0 (Foundation)*
+

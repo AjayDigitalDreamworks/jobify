@@ -154,8 +154,8 @@ npm run dev
    - Nodemon will automatically restart
 
 2. **Frontend Changes**
-   - Edit files in `client/pages/` or create components
-   - Next.js hot reload is automatic
+   - Edit files in `client/src/` or create components
+   - React \(Vite\) hot reload is automatic
 
 3. **Database Models**
    - Add models in `server/models/`
@@ -187,7 +187,7 @@ client/
 ├── utils/             # Helper functions (to be created)
 ├── package.json
 ├── .env.local
-└── next.config.js
+└── vite.config.js
 ```
 
 ## Troubleshooting
@@ -260,7 +260,7 @@ npm install
 ### Client (.env.local)
 | Variable | Value | Required |
 |----------|-------|----------|
-| NEXT_PUBLIC_API_URL | http://localhost:5000/api | Yes |
+| VITE_API_URL | http://localhost:5000/api | Yes |
 
 ## Next Development Steps
 
@@ -280,7 +280,7 @@ npm install
    ```
    client/components/JobCard.js
    client/components/Navbar.js
-   client/pages/jobs.js
+   client/src/jobs.js
    ```
 
 4. **Add Authentication**
@@ -313,7 +313,7 @@ git checkout -b feature/feature-name
 
 ## Resources
 
-- **Next.js Docs**: https://nextjs.org/docs
+- **React \(Vite\) Docs**: https://react.org/docs
 - **Express Docs**: https://expressjs.com/
 - **MongoDB Docs**: https://docs.mongodb.com/
 - **Node.js Docs**: https://nodejs.org/docs/
@@ -321,3 +321,4 @@ git checkout -b feature/feature-name
 ---
 
 **Need Help?** Check the main README.md or GIT_WORKFLOW.md
+

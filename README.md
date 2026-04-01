@@ -4,11 +4,11 @@
 
 ```
 jobify/
-├── client/              # Next.js Frontend
-│   ├── pages/          # Next.js pages
+├── client/              # React \(Vite\) Frontend
+│   ├── pages/          # React \(Vite\) pages
 │   ├── package.json    # Frontend dependencies
 │   ├── .env.local      # Frontend env config
-│   └── next.config.js  # Next.js configuration
+│   └── vite.config.js  # React \(Vite\) configuration
 │
 ├── server/             # Node.js/Express Backend
 │   ├── server.js       # Main server file
@@ -23,7 +23,7 @@ jobify/
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 14
+- **Framework**: React \(Vite\)
 - **Language**: JavaScript/React
 - **HTTP Client**: Axios
 - **Styling**: CSS (can be extended with Tailwind/SCSS)
@@ -87,7 +87,7 @@ npm install
 
 **Backend is already configured in `.env.local`:**
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 **Start Frontend:**
@@ -166,7 +166,7 @@ server/
 └── server.js           # Entry point
 
 client/
-├── pages/              # Next.js pages
+├── pages/              # React \(Vite\) pages
 ├── components/         # Reusable components
 ├── public/             # Static assets
 ├── styles/             # CSS/SCSS
@@ -240,7 +240,7 @@ npm install
 
 ### frontend can't connect to backend
 - Verify backend is running on port 5000
-- Check `NEXT_PUBLIC_API_URL` in client `.env.local`
+- Check `VITE_API_URL` in client `.env.local`
 - Check browser console for CORS errors
 
 ## 📚 Next Steps
@@ -265,3 +265,4 @@ npm install
 ---
 
 Happy coding! 🎉
+
