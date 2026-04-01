@@ -8,16 +8,16 @@ All foundational components for the Jobify job portal are now in place and ready
 
 ## 📦 WHAT'S BEEN CREATED
 
-### 🎨 Frontend (React \(Vite\))
+### 🎨 Frontend (React (Vite))
 ```
 client/
-├── ✅ package.json          - React \(Vite\) dependencies & scripts
-├── ✅ vite.config.js        - React \(Vite\) configuration
+├── ✅ package.json          - React (Vite) dependencies & scripts
+├── ✅ vite.config.js        - React (Vite) configuration
 ├── ✅ .env.local            - API URL configuration
 ├── ✅ .gitignore            - Git ignore rules
 ├── ✅ pages/
 │   ├── ✅ index.js          - Home page with API testing
-│   └── ✅ _app.js           - App wrapper
+│   └── ✅ main.jsx          - App entry
 ├── ✅ styles/
 │   └── ✅ globals.css       - Global CSS styling
 ├── ✅ components/           - (Ready for components)
@@ -103,7 +103,7 @@ Visit:
 | Component | Status | Details |
 |-----------|--------|---------|
 | **Git Repository** | ✅ Ready | Initialized with main/develop branches |
-| **Frontend Setup** | ✅ Ready | React \(Vite\), React 18, hot-reload enabled |
+| **Frontend Setup** | ✅ Ready | React (Vite), React 18, hot-reload enabled |
 | **Backend Setup** | ✅ Ready | Express.js, CORS, basic routes working |
 | **Database** | ✅ Ready | MongoDB Atlas integration (needs connection) |
 | **API** | ✅ Ready | Health check, jobs endpoints functional |
@@ -294,7 +294,7 @@ PORT=5001
 ## ✨ WHAT'S WORKING NOW
 
 - ✅ Express server with middleware
-- ✅ React \(Vite\) frontend with hot reload
+- ✅ React (Vite) frontend with hot reload
 - ✅ API health check endpoint
 - ✅ CSS styling (global + component-ready)
 - ✅ Environment configuration
@@ -390,4 +390,5 @@ Ready for Phase 1 development!
 *Last Updated: March 31, 2026*  
 *Project: Jobify - Job Portal Application*  
 *Version: 1.0.0 (Foundation)*
+
 

@@ -155,7 +155,7 @@ npm run dev
 
 2. **Frontend Changes**
    - Edit files in `client/src/` or create components
-   - React \(Vite\) hot reload is automatic
+   - React (Vite) hot reload is automatic
 
 3. **Database Models**
    - Add models in `server/models/`
@@ -177,10 +177,9 @@ server/
 └── .env.example
 
 client/
-├── pages/
-│   ├── index.js      # Home page
-│   ├── _app.js       # App wrapper (to be created)
-│   └── _document.js  # Document (to be created)
+├── src/
+│   ├── main.jsx      # Vite entry point
+│   └── App.jsx       # Main app component
 ├── components/        # Reusable components (to be created)
 ├── public/            # Static files (to be created)
 ├── styles/            # CSS files (to be created)
@@ -280,7 +279,7 @@ npm install
    ```
    client/components/JobCard.js
    client/components/Navbar.js
-   client/src/jobs.js
+   client/src/App.jsx
    ```
 
 4. **Add Authentication**
@@ -313,7 +312,8 @@ git checkout -b feature/feature-name
 
 ## Resources
 
-- **React \(Vite\) Docs**: https://react.org/docs
+- **Vite Docs**: https://vite.dev/guide/
+- **React Docs**: https://react.dev/
 - **Express Docs**: https://expressjs.com/
 - **MongoDB Docs**: https://docs.mongodb.com/
 - **Node.js Docs**: https://nodejs.org/docs/
@@ -321,4 +321,5 @@ git checkout -b feature/feature-name
 ---
 
 **Need Help?** Check the main README.md or GIT_WORKFLOW.md
+
 

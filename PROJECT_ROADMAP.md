@@ -11,7 +11,7 @@
 ## 🎯 PHASE 0 OBJECTIVES (ALL COMPLETE ✅)
 
 ### ✅ Tech Stack Finalized
-- [x] React \(Vite\) frontend initialized
+- [x] React (Vite) frontend initialized
 - [x] Node.js/Express backend initialized
 - [x] MongoDB Atlas integration configured
 - [x] Environment files set up (.env)
@@ -113,13 +113,13 @@ jobify/
 │
 ├── 🌐 CLIENT (Frontend)
 │   ├── package.json                   [Dependencies]
-│   ├── vite.config.js                 [React \(Vite\) config]
+│   ├── vite.config.js                 [React (Vite) config]
 │   ├── .env.local                     [API URL]
 │   ├── .gitignore                     [Git rules]
 │   │
 │   ├── 📄 pages/
 │   │   ├── index.js                   [Home page]
-│   │   ├── _app.js                    [App wrapper]
+│   │   ├── main.jsx                   [App entry]
 │   │   └── .gitkeep
 │   │
 │   ├── 🎨 styles/
@@ -312,7 +312,7 @@ git push origin feature/feature-name    # Push to remote
 
 ### After Phase 0
 - Creating routes → Follow Express patterns
-- Creating components → Use React \(Vite\) best practices
+- Creating components → Use React (Vite) best practices
 - Database queries → Use Mongoose methods
 - Authentication → Use JWT + bcryptjs
 
@@ -325,7 +325,7 @@ git push origin feature/feature-name    # Push to remote
 │        PHASE 0 - FOUNDATION STATUS      │
 ├─────────────────────────────────────────┤
 │ Git Repository        ✅ Ready          │
-│ Frontend (React \(Vite\))    ✅ Ready          │
+│ Frontend (React (Vite))    ✅ Ready          │
 │ Backend (Express)     ✅ Ready          │
 │ Database (MongoDB)    ✅ Configured     │
 │ Environment Config    ✅ Ready          │
@@ -343,7 +343,7 @@ git push origin feature/feature-name    # Push to remote
 
 ### If you're new to...
 
-**React \(Vite\)?**
+**React (Vite)?**
 - Read: client pages and understand structure
 - Study: VITE_API_URL usage
 - Learn: Pages, components, hooks pattern
@@ -427,4 +427,5 @@ npm run dev
 ```
 
 Let's go! 💪
+
 

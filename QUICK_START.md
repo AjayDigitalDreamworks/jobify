@@ -41,7 +41,7 @@ Then visit:
 - ✅ Auto-restarts on file changes (nodemon)
 
 ### Frontend (Client)
-- ✅ React \(Vite\) running on port 3000
+- ✅ React (Vite) running on port 3000
 - ✅ Connected to backend API
 - ✅ Shows health status
 - ✅ Hot-reload enabled
@@ -77,10 +77,10 @@ curl http://localhost:5000/api/health
 
 ```
 jobify/
-├── client/               ← Frontend (React \(Vite\))
-│   ├── pages/
-│   │   ├── index.js      ← Home page
-│   │   └── _app.js       ← App setup
+├── client/               ← Frontend (React (Vite))
+│   ├── src/
+│   │   ├── main.jsx      ← Vite app entry
+│   │   └── App.jsx       ← Home page
 │   ├── styles/
 │   │   └── globals.css   ← Global styles
 │   ├── .env.local        ← Backend URL
@@ -141,7 +141,7 @@ git checkout -b develop
 ## Now What? (Next Steps)
 
 ### Option 1: Just Explore
-- Modify `client/src/index.js` to change homepage
+- Modify `client/src/App.jsx` to change homepage
 - Server auto-restarts when you change files
 - Frontend hot-reloads automatically
 
@@ -224,4 +224,5 @@ For more details, see:
 - Complete setup: [SETUP_GUIDE.md](SETUP_GUIDE.md)
 - Full docs: [README.md](README.md)
 - Git workflow: [GIT_WORKFLOW.md](GIT_WORKFLOW.md)
+
 

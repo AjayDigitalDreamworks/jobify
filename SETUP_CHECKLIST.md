@@ -32,18 +32,19 @@
 - [ ] Express server starts without errors
 
 ## Phase 3: Frontend Setup
-- [ ] `client/package.json` created with React \(Vite\)
+- [ ] `client/package.json` created with React (Vite)
 - [ ] `client/vite.config.js` created
-- [ ] `client/src/index.js` created
+- [ ] `client/src/main.jsx` created
+- [ ] `client/src/App.jsx` created
 - [ ] `client/.env.local` created with API URL
 - [ ] `client/.gitignore` created
 - [ ] Dependencies installed: `cd client && npm install`
-- [ ] React \(Vite\) app builds without errors
+- [ ] React (Vite) app builds without errors
 
 ## Phase 4: Environment Configuration
 - [ ] `server/.env` has valid MongoDB URI
 - [ ] `server/.env` has JWT_SECRET
-- [ ] `client/.env.local` has API_URL = http://localhost:5000/api
+- [ ] `client/.env.local` has VITE_API_URL = http://localhost:5000/api
 - [ ] `.env` files are in `.gitignore`
 
 ## Phase 5: Documentation
@@ -150,4 +151,5 @@ If all checkboxes are checked, your development environment is ready! 🎉
 **Developer**: _______________  
 **Environment**: Development  
 **Status**: ✅ READY FOR DEVELOPMENT
+
 

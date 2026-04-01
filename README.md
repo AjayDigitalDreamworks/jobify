@@ -4,11 +4,11 @@
 
 ```
 jobify/
-├── client/              # React \(Vite\) Frontend
-│   ├── pages/          # React \(Vite\) pages
+├── client/              # React (Vite) Frontend
+│   ├── src/            # React source files
 │   ├── package.json    # Frontend dependencies
 │   ├── .env.local      # Frontend env config
-│   └── vite.config.js  # React \(Vite\) configuration
+│   └── vite.config.js  # React (Vite) configuration
 │
 ├── server/             # Node.js/Express Backend
 │   ├── server.js       # Main server file
@@ -23,7 +23,7 @@ jobify/
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: React \(Vite\)
+- **Framework**: React (Vite)
 - **Language**: JavaScript/React
 - **HTTP Client**: Axios
 - **Styling**: CSS (can be extended with Tailwind/SCSS)
@@ -166,7 +166,7 @@ server/
 └── server.js           # Entry point
 
 client/
-├── pages/              # React \(Vite\) pages
+├── src/                # React pages/components
 ├── components/         # Reusable components
 ├── public/             # Static assets
 ├── styles/             # CSS/SCSS
@@ -265,4 +265,5 @@ npm install
 ---
 
 Happy coding! 🎉
+
 
