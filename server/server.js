@@ -11,13 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Connection
-const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://username:password@cluster.mongodb.net/jobify';
-
-mongoose.connect(mongoURI)
-  .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch(err => console.log('❌ MongoDB connection error:', err));
-
 // Basic Routes
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend is running ✅', timestamp: new Date() });
