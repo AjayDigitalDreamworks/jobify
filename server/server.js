@@ -4,6 +4,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const connectDB = require('./utils/db');
 
+// Import routes
+const healthRoutes = require('./routes/health');
+const jobRoutes = require('./routes/jobs');
+
 const app = express();
 
 // Middleware
@@ -11,24 +15,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic Routes
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Backend is running ✅', timestamp: new Date() });
-});
-
-app.get('/api/jobs', (req, res) => {
-  res.json({
-    message: 'Jobs endpoint is working',
-    jobs: []
-  });
-});
-
-app.post('/api/jobs', (req, res) => {
-  res.status(201).json({
-    message: 'Job created successfully',
-    data: req.body
-  });
-});
+// Routes
+app.use('/api/auth', authRouter); 
+app.use('/api', healthRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
