@@ -7,6 +7,7 @@ const connectDB = require('./utils/db');
 // Import routes
 const healthRoutes = require('./routes/health');
 const jobRoutes = require('./routes/jobs');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth', authRouter); 
+app.use('/api/auth', authRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/jobs', jobRoutes);
 
