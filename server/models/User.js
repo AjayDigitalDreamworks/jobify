@@ -99,7 +99,7 @@ userSchema.methods.generateToken = async function (){
             email: this.email,
             isAdmin: this.role === 'admin',
         },
-        process.env.JWT_SECRET_KEY,
+        process.env.JWT_SECRET || 'your-secret-key',
         {
             expiresIn: "7d",
         }

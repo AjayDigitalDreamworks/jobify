@@ -12,12 +12,12 @@ const home = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { name, email, password } = req.body; // Extract user details from request body
+        const { name, email, password, role } = req.body; // Extract user details from request body
         const userExist = await User.findOne({ email }); // Check if user already exists
         if (userExist) {
             return res.status(400).json({ message: 'User already exists' });
         }
-        const userCreated = await User.create({ name, email, password });
+        const userCreated = await User.create({ name, email, password, role });
         res.status(200).json({ 
             message: 'User created successfully', 
             user: userCreated,
