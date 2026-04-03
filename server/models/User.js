@@ -69,17 +69,21 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
+//Secure password hashing before saving user to database
+userSchema.pre('save', async function(next) {
+    const user = this;
+    if (!user.isModified('password')) { //To check if user is old or new, if old then skip hashing
+        console.log("Password not modified");
+        next();
+    }
+    try {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt); //Hash the password and save it to user object
+        next();
+    } catch (error) {
+        console.log("Error in hashing password", error);
+        next(error);
+    }
 });
 
 // Method to compare passwords
@@ -87,13 +91,22 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Method to generate JWT token
-userSchema.methods.generateToken = function () {
-  const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-  const token = jwt.sign({ userId: this._id.toString() }, JWT_SECRET, {
-    expiresIn: '7d',
-  });
-  return token;
-};
+//JSON Web Token ( userSchema.methods se kitne bhi functions create kar sakte hai and usse controllers mein use kar sakte hai )
+userSchema.methods.generateToken = async function (){  
+    try{
+        return jwt.sign({ //JWT payload mein user ki id, email aur role store karenge taki future mein authentication ke time pe use kar sake
+            userId: this._id.toString(),
+            email: this.email,
+            isAdmin: this.role === 'admin',
+        },
+        process.env.JWT_SECRET_KEY,
+        {
+            expiresIn: "7d",
+        }
+        );
+    }catch(error){
+        console.log("Error in generating token: ",error);
+    }
+}
 
 module.exports = mongoose.model('User', userSchema);
