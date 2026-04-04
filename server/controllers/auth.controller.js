@@ -11,6 +11,7 @@ const REFRESH_TOKEN_SALT_ROUNDS = 10;
 
 const sanitizeEmail = (email = '') => email.trim().toLowerCase();
 
+//login/register ke baad ye return hota hai, jisme user info ke sath access aur refresh token bhi hota hai
 const buildAuthResponse = (user) => ({
   user: user.toSafeObject(),
   accessToken: generateAccessToken(user),
@@ -22,20 +23,21 @@ const saveUserRefreshToken = async (userId, refreshToken) => {
   await User.findByIdAndUpdate(userId, { refreshToken: hashedRefreshToken });
 };
 
+// Registration ke liye payload validation, jisme basic checks hote hain
 const validateRegisterPayload = ({ name, email, password, role }) => {
-  if (!name || !email || !password) {
+  if (!name || !email || !password) { // name, email, aur password required 
     return 'Name, email, and password are required';
   }
 
-  if (password.length < 8) {
+  if (password.length < 8) { // password should be at least 8 characters long
     return 'Password must be at least 8 characters long';
   }
 
-  if (role && !ALLOWED_ROLES.includes(role)) {
+  if (role && !ALLOWED_ROLES.includes(role)) { // if role is provided, it must be either 'jobSeeker' or 'recruiter'
     return 'Invalid role provided';
   }
 
-  if (!/^\S+@\S+\.\S+$/.test(email)) {
+  if (!/^\S+@\S+\.\S+$/.test(email)) { //email format check
     return 'Invalid email address';
   }
 
@@ -47,11 +49,12 @@ const register = async (req, res) => {
     const { name, email, password, role } = req.body;
     const validationError = validateRegisterPayload({ name, email, password, role });
 
-    if (validationError) {
+    if (validationError) { //if there is any validation error, return 400 with the error message
       return res.status(400).json({ message: validationError });
     }
 
-    const normalizedEmail = sanitizeEmail(email);
+    // Normalize email to ensure uniqueness and prevent duplicates due to case sensitivity or whitespace
+    const normalizedEmail = sanitizeEmail(email); //test@GMAIL.com → test@gmail.com
     const existingUser = await User.findOne({ email: normalizedEmail });
 
     if (existingUser) {
@@ -65,8 +68,8 @@ const register = async (req, res) => {
       role,
     });
 
-    const response = buildAuthResponse(user);
-    await saveUserRefreshToken(user._id, response.refreshToken);
+    const response = buildAuthResponse(user); //response me user info ke sath access aur refresh token bhi hota hai
+    await saveUserRefreshToken(user._id, response.refreshToken); //refresh token ko securely store karne ke liye usko hash karke database me save karte hain
 
     return res.status(201).json({
       message: 'User registered successfully',
@@ -90,7 +93,7 @@ const login = async (req, res) => {
     }
 
     const normalizedEmail = sanitizeEmail(email);
-    const user = await User.findOne({ email: normalizedEmail }).select('+password');
+    const user = await User.findOne({ email: normalizedEmail }).select('+password'); //login ke time password bhi select karna padta hai, kyunki by default password field ko select nahi kiya jata hai for security reasons
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -122,7 +125,8 @@ const refresh = async (req, res) => {
       return res.status(400).json({ message: 'Refresh token is required' });
     }
 
-    const decoded = verifyRefreshToken(refreshToken);
+    //refresh token ko verify karte hain, agar valid hai to usme se userId nikalte hain, agar invalid hai to error throw hota hai
+    const decoded = verifyRefreshToken(refreshToken); 
     const user = await User.findById(decoded.userId).select('+refreshToken');
 
     if (!user || !user.refreshToken) {

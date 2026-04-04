@@ -3,21 +3,56 @@
 ## 📋 Project Structure
 
 ```
-jobify/
-├── client/              # React (Vite) Frontend
-│   ├── src/            # React source files
-│   ├── package.json    # Frontend dependencies
-│   ├── .env.local      # Frontend env config
-│   └── vite.config.js  # React (Vite) configuration
-│
-├── server/             # Node.js/Express Backend
-│   ├── server.js       # Main server file
-│   ├── package.json    # Backend dependencies
-│   ├── .env            # Backend env config
-│   └── .env.example    # Example env template
-│
-├── .git/               # Git repository
-└── README.md           # This file
+Jobify
+├─ client
+│  ├─ components
+│  ├─ index.html
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ pages
+│  ├─ public
+│  ├─ src
+│  │  ├─ App.jsx
+│  │  └─ main.jsx
+│  ├─ styles
+│  │  └─ globals.css
+│  └─ vite.config.js
+├─ GIT_WORKFLOW.md
+├─ package-lock.json
+├─ package.json
+├─ PHASE_0_COMPLETE.md
+├─ PHASE_0_SUMMARY.md
+├─ PROJECT_ROADMAP.md
+├─ QUICK_START.md
+├─ README.md
+├─ server
+│  ├─ app.js
+│  ├─ config
+│  │  └─ db.js
+│  ├─ controllers
+│  │  ├─ auth.controller.js
+│  │  └─ authController.js
+│  ├─ middleware
+│  │  ├─ auth.middleware.js
+│  │  ├─ authMiddleware.js
+│  │  ├─ rateLimit.middleware.js
+│  │  └─ role.middleware.js
+│  ├─ models
+│  │  ├─ Job.js
+│  │  ├─ User.js
+│  │  └─ user.model.js
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ server.js
+│  └─ utils
+│     ├─ db.js
+│     └─ generateToken.js
+├─ setup.bat
+├─ setup.sh
+├─ SETUP_CHECKLIST.md
+├─ SETUP_GUIDE.md
+└─ START_HERE.md
+
 ```
 
 ## 🛠️ Tech Stack

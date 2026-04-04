@@ -3,13 +3,14 @@ const { verifyAccessToken } = require('../utils/generateToken');
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization || '';
+    //Authorization: Bearer eyJhbGciOiJIUzI1Ni...  ye pura string authHeader mei ata hai 
+    const authHeader = req.headers.authorization || ''; 
 
     if (!authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Authorization token is required' });
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1]; //split → ["Bearer", "TOKEN"] and index 1 = actual JWT
     const decoded = verifyAccessToken(token);
     const user = await User.findById(decoded.userId);
 
