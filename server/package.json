@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "profile:test": "node scripts/test-profile-entry.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

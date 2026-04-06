@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Virtual field to populate the user's profile
+userSchema.virtual('profile', {
+  ref: 'Profile', //किस model से connect करना है (Profile)
+  localField: '_id', //User का _id
+  foreignField: 'userId', //Profile का userId
+  justOne: true, //एक user का एक ही profile होगा
+});
+
 userSchema.pre('save', async function saveHook(next) {
   if (!this.isModified('password')) {
     return next();
