@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { getRouteForLabel } from "../src/lib/navigation";
 
 const sidebarNav = [
   { icon: "grid", label: "Dashboard" },
@@ -11,7 +12,7 @@ const sidebarNav = [
   { icon: "settings", label: "Settings" },
 ];
 
-const conversations = [
+const defaultConversations = [
   {
     id: 1,
     name: "Jordan Davies",
@@ -45,7 +46,7 @@ const conversations = [
   },
 ];
 
-const messages = [
+const defaultMessages = [
   {
     id: 1,
     sender: "jordan",
@@ -69,7 +70,7 @@ const messages = [
   },
 ];
 
-const quickReplies = [
+const defaultQuickReplies = [
   "Sounds great, I'll review it now!",
   "Who else will be attending?",
   "Should I prepare any slides?",
@@ -217,11 +218,16 @@ function Icon({ name, className = "w-5 h-5" }) {
   return icons[name] || null;
 }
 
-export default function JobifyMessages() {
+export default function JobifyMessages({ data = {}, onNavigate = () => {} }) {
   const [inputValue, setInputValue] = useState("");
   const [activeConv, setActiveConv] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [convPanelOpen, setConvPanelOpen] = useState(false);
+  const conversations = data.conversations || defaultConversations;
+  const messages = data.messages || defaultMessages;
+  const quickReplies = data.quickReplies || defaultQuickReplies;
+  const currentUser = data.currentUser || { name: "Alex Rivera", tier: "Pro Member" };
+  const selectedConversation = useMemo(() => conversations.find((conversation) => conversation.id === activeConv) || conversations[0], [activeConv, conversations]);
 
   return (
     <div className="flex h-screen w-full bg-gray-50 font-sans overflow-hidden">
@@ -260,6 +266,12 @@ export default function JobifyMessages() {
           {sidebarNav.map((item) => (
             <button
               key={item.label}
+              onClick={() => {
+                const route = getRouteForLabel(item.label);
+                if (route) {
+                  onNavigate(route);
+                }
+              }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                 ${item.active
                   ? "bg-indigo-50 text-indigo-600"
@@ -278,8 +290,8 @@ export default function JobifyMessages() {
             AR
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-gray-900 truncate">Alex Rivera</div>
-            <div className="text-xs text-gray-400">Pro Member</div>
+            <div className="text-sm font-semibold text-gray-900 truncate">{currentUser.name}</div>
+            <div className="text-xs text-gray-400">{currentUser.tier}</div>
           </div>
           <button className="text-gray-400 hover:text-gray-600">
             <Icon name="logout" className="w-4 h-4" />

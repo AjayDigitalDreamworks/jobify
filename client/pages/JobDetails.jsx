@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getRouteForLabel, ROUTES } from "../src/lib/navigation";
 
 const navItems = [
   { label: "Dashboard", icon: "⊞" },
@@ -11,21 +12,21 @@ const navItems = [
   { label: "Settings", icon: "⚙" },
 ];
 
-const requirements = [
+const defaultRequirements = [
   "5+ years of experience designing complex SaaS products or data-heavy applications.",
   "Mastery of Figma and modern design system methodologies.",
   "Strong understanding of accessibility (WCAG 2.1) and user-centric design principles.",
   "Ability to communicate design decisions effectively to non-design stakeholders.",
 ];
 
-const benefits = [
+const defaultBenefits = [
   { icon: "💼", title: "Health & Dental", desc: "Premium family coverage" },
   { icon: "✈️", title: "Unlimited PTO", desc: "Mandatory 2-week break" },
   { icon: "💰", title: "Stock Options", desc: "Early-stage equity grants" },
   { icon: "💪", title: "Wellness Stipend", desc: "$150 monthly credit" },
 ];
 
-const similarJobs = [
+const defaultSimilarJobs = [
   {
     color: "bg-blue-500",
     letter: "P",
@@ -52,9 +53,33 @@ const similarJobs = [
   },
 ];
 
-export default function JobDetails() {
+export default function JobDetails({ data = {}, onNavigate = () => {}, loading = false }) {
   const [activeNav, setActiveNav] = useState("Jobs");
   const [saved, setSaved] = useState(false);
+  const requirements = data.requirements || defaultRequirements;
+  const benefits = data.benefits || defaultBenefits;
+  const similarJobs = data.similarJobs || defaultSimilarJobs;
+  const title = data.title || "Senior Product Designer";
+  const company = data.company || "Lumina Tech Solutions";
+  const location = data.location || "San Francisco, CA (Remote Friendly)";
+  const type = data.type || "Full-time";
+  const salary = data.salary || "$140k - $185k";
+  const posted = data.posted || "2 days ago";
+  const applicants = data.applicants || 42;
+  const experience = data.experience || "Senior (5+ yrs)";
+  const match = data.match || 92;
+
+  const handleNavClick = (label) => {
+    setActiveNav(label);
+    const route = getRouteForLabel(label);
+    if (route) {
+      onNavigate(route);
+    }
+  };
+
+  if (loading) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-600">Loading job details...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -75,7 +100,7 @@ export default function JobDetails() {
           {["Dashboard", "Jobs", "Network"].map((item) => (
             <button
               key={item}
-              onClick={() => setActiveNav(item)}
+              onClick={() => handleNavClick(item)}
               className={`text-sm font-medium transition-colors ${
                 activeNav === item ? "text-purple-600 font-semibold" : "text-gray-500 hover:text-gray-800"
               }`}
@@ -112,7 +137,7 @@ export default function JobDetails() {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => setActiveNav(item.label)}
+                onClick={() => handleNavClick(item.label)}
                 className={`w-full flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors text-left ${
                   activeNav === item.label
                     ? "bg-purple-50 text-purple-700 border-l-4 border-purple-600"
@@ -136,7 +161,7 @@ export default function JobDetails() {
               <span>›</span>
               <button className="hover:text-purple-600 transition-colors">Design</button>
               <span>›</span>
-              <span className="text-gray-500">Senior Product Designer</span>
+              <span className="text-gray-500">{title}</span>
             </div>
 
             {/* Job Header Card */}
@@ -150,20 +175,20 @@ export default function JobDetails() {
                 </div>
                 <div className="flex-1">
                   <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-3">
-                    Senior Product Designer
+                    {title}
                   </h1>
                   <div className="flex flex-col gap-2 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
                       <span className="text-gray-400">🏢</span>
-                      <span className="font-medium">Lumina Tech Solutions</span>
+                      <span className="font-medium">{company}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-gray-400">📍</span>
-                      <span>San Francisco, CA (Remote Friendly)</span>
+                      <span>{location}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-gray-400">🕐</span>
-                      <span>Full-time</span>
+                      <span>{type}</span>
                     </div>
                   </div>
                 </div>
@@ -179,7 +204,7 @@ export default function JobDetails() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                     </svg>
                   </button>
-                  <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors">
+                  <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors" onClick={() => onNavigate(ROUTES.applications)}>
                     Apply Now
                   </button>
                 </div>

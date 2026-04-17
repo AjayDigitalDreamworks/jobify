@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getRouteForLabel, ROUTES } from "../src/lib/navigation";
 
 const navItems = [
   { label: "Dashboard", icon: "⊞" },
@@ -9,7 +10,7 @@ const navItems = [
   { label: "Settings", icon: "⚙" },
 ];
 
-const skills = [
+const defaultSkills = [
   { name: "Product Strategy", score: 98, color: "border-gray-300 text-gray-700" },
   { name: "UX Research", score: 85, color: "border-gray-300 text-gray-700" },
   { name: "Figma Mastery", score: 92, color: "border-purple-400 text-purple-700 bg-purple-50" },
@@ -25,7 +26,7 @@ const scoreColor = (score) => {
   return "bg-red-400 text-white";
 };
 
-const improvements = [
+const defaultImprovements = [
   {
     icon: "✕",
     iconBg: "bg-red-100",
@@ -49,11 +50,22 @@ const improvements = [
   },
 ];
 
-export default function ResumeAnalyzer() {
+export default function ResumeAnalyzer({ data = {}, onNavigate = () => {} }) {
   const [activeNav, setActiveNav] = useState("Resume Analyzer");
   const [activeSkillTab, setActiveSkillTab] = useState("Core Skills");
   const [dragging, setDragging] = useState(false);
-  const [savedJob, setSavedJob] = useState("Senior Product Designer @ Meta");
+  const skills = data.skills || defaultSkills;
+  const improvements = data.improvements || defaultImprovements;
+  const savedJobs = data.savedJobs || ["Senior Product Designer @ Meta"];
+  const [savedJob, setSavedJob] = useState(savedJobs[0]);
+
+  const handleNavClick = (label) => {
+    setActiveNav(label);
+    const route = getRouteForLabel(label);
+    if (route) {
+      onNavigate(route);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
@@ -107,7 +119,7 @@ export default function ResumeAnalyzer() {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => setActiveNav(item.label)}
+                onClick={() => handleNavClick(item.label)}
                 className={`w-full flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors text-left ${
                   activeNav === item.label
                     ? "bg-purple-50 text-purple-700 border-l-4 border-purple-600"
@@ -176,9 +188,9 @@ export default function ResumeAnalyzer() {
                       onChange={(e) => setSavedJob(e.target.value)}
                       className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 font-medium outline-none cursor-pointer focus:border-purple-400 transition-colors"
                     >
-                      <option>Senior Product Designer @ Meta</option>
-                      <option>UX Lead @ Google</option>
-                      <option>Product Designer @ Stripe</option>
+                      {savedJobs.map((job) => (
+                        <option key={job}>{job}</option>
+                      ))}
                     </select>
                     <svg className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -242,7 +254,7 @@ export default function ResumeAnalyzer() {
                 <h3 className="font-bold text-gray-900 text-base">Generate AI Resume Tailored to Meta</h3>
                 <p className="text-sm text-gray-500 mt-0.5">We'll rewrite your bullet points to match the job description perfectly.</p>
               </div>
-              <button className="bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shrink-0">
+              <button className="bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shrink-0" onClick={() => onNavigate(ROUTES.jobs)}>
                 Start AI Rewrite
               </button>
             </div>

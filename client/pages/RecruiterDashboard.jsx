@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getRouteForLabel, ROUTES } from "../src/lib/navigation";
 
 function Icon({ name, className = "w-5 h-5" }) {
   const icons = {
@@ -170,7 +171,7 @@ const sidebarAI = [
   { icon: "settings", label: "Settings" },
 ];
 
-const stats = [
+const defaultStats = [
   {
     label: "ACTIVE JOB POSTS",
     value: "12",
@@ -228,7 +229,7 @@ const stats = [
   },
 ];
 
-const candidates = [
+const defaultCandidates = [
   {
     id: 1,
     name: "Sarah Jenkins",
@@ -273,7 +274,7 @@ const candidates = [
   },
 ];
 
-const chartBars = [
+const defaultChartBars = [
   { day: "MON", height: 40 },
   { day: "TUE", height: 55 },
   { day: "WED", height: 65 },
@@ -283,15 +284,20 @@ const chartBars = [
   { day: "SUN", height: 50 },
 ];
 
-const pipeline = [
+const defaultPipeline = [
   { label: "Applied", count: 842, pct: 100 },
   { label: "Phone Screen", count: 124, pct: 50 },
   { label: "On-site Interview", count: 42, pct: 28 },
   { label: "Offers Extended", count: 12, pct: 10 },
 ];
 
-export default function RecruiterDashboard() {
+export default function RecruiterDashboard({ data = {}, onNavigate = () => {} }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const stats = data.stats || defaultStats;
+  const candidates = data.candidates || defaultCandidates;
+  const chartBars = data.chartBars || defaultChartBars;
+  const pipeline = data.pipeline || defaultPipeline;
+  const recruiterName = data.recruiterName || "Marcus";
 
   return (
     <div className="flex h-screen w-full bg-gray-50 font-sans overflow-hidden">
@@ -330,6 +336,12 @@ export default function RecruiterDashboard() {
           {sidebarNav.map((item) => (
             <button
               key={item.label}
+              onClick={() => {
+                const route = getRouteForLabel(item.label);
+                if (route) {
+                  onNavigate(route);
+                }
+              }}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                 ${item.active
                   ? "text-indigo-600 border-l-2 border-indigo-600 bg-indigo-50 rounded-l-none"
@@ -348,6 +360,12 @@ export default function RecruiterDashboard() {
           {sidebarAI.map((item) => (
             <button
               key={item.label}
+              onClick={() => {
+                const route = getRouteForLabel(item.label);
+                if (route) {
+                  onNavigate(route);
+                }
+              }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-colors"
             >
               <Icon name={item.icon} className="w-[18px] h-[18px] flex-shrink-0" />
@@ -398,7 +416,7 @@ export default function RecruiterDashboard() {
             <button className="p-2 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-full transition">
               <Icon name="chat" className="w-5 h-5" />
             </button>
-            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
+            <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition" onClick={() => onNavigate(ROUTES.jobs)}>
               <Icon name="plus" className="w-4 h-4" />
               <span className="hidden sm:inline">Post a Job</span>
             </button>
@@ -412,7 +430,7 @@ export default function RecruiterDashboard() {
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Recruiter Dashboard</h1>
-                <p className="text-sm text-gray-500 mt-1">Welcome back, Marcus. Your AI matches are ready for review.</p>
+                <p className="text-sm text-gray-500 mt-1">Welcome back, {recruiterName}. Your AI matches are ready for review.</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition bg-white">

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getRouteForLabel } from "../src/lib/navigation";
 
 const navItems = [
   { label: "Dashboard", icon: "⊞" },
@@ -11,7 +12,7 @@ const navItems = [
   { label: "Settings", icon: "⚙" },
 ];
 
-const suggestions = [
+const defaultSuggestions = [
   {
     name: "Sarah Chen",
     title: "Senior UX Architect at Meta",
@@ -50,12 +51,12 @@ const suggestions = [
   },
 ];
 
-const pendingInvitations = [
+const defaultPendingInvitations = [
   { name: "Liam O'Neill", title: "Recruiter at Google", avatar: "https://i.pravatar.cc/40?img=53" },
   { name: "Sophie Laurent", title: "Founder at Artella", avatar: "https://i.pravatar.cc/40?img=49" },
 ];
 
-const activityPosts = [
+const defaultActivityPosts = [
   {
     name: "Jordan Smith",
     degree: "1st",
@@ -78,16 +79,27 @@ const activityPosts = [
   },
 ];
 
-const upcomingEvents = [
+const defaultUpcomingEvents = [
   { month: "OCT", day: "12", title: "Design Systems 2024", desc: "Virtual Event • 1.2k attending" },
   { month: "OCT", day: "15", title: "AI in Fintech Summit", desc: "San Francisco • 45 from network" },
 ];
 
-export default function NetworkPage() {
+export default function NetworkPage({ data = {}, onNavigate = () => {} }) {
   const [activeNav, setActiveNav] = useState("Network");
   const [activityTab, setActivityTab] = useState("All");
   const [connected, setConnected] = useState([]);
-  const [invitations, setInvitations] = useState(pendingInvitations);
+  const suggestions = data.suggestions || defaultSuggestions;
+  const activityPosts = data.activityPosts || defaultActivityPosts;
+  const upcomingEvents = data.upcomingEvents || defaultUpcomingEvents;
+  const [invitations, setInvitations] = useState(data.pendingInvitations || defaultPendingInvitations);
+
+  const handleNavClick = (label) => {
+    setActiveNav(label);
+    const route = getRouteForLabel(label);
+    if (route) {
+      onNavigate(route);
+    }
+  };
 
   const toggleConnect = (name) => {
     setConnected((prev) =>
@@ -137,7 +149,7 @@ export default function NetworkPage() {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => setActiveNav(item.label)}
+                onClick={() => handleNavClick(item.label)}
                 className={`w-full flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors text-left ${
                   activeNav === item.label
                     ? "bg-purple-50 text-purple-700 border-l-4 border-purple-600"
