@@ -2,12 +2,26 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth.middleware');
 const authorizeRoles = require('../middleware/role.middleware');
+const { getJobById, jobs } = require('../data/frontendData');
 
 // GET all jobs
 router.get('/', (req, res) => {
   res.json({
-    message: 'Jobs endpoint is working',
-    jobs: []
+    message: 'Jobs fetched successfully',
+    jobs,
+  });
+});
+
+router.get('/:id', (req, res) => {
+  const job = getJobById(req.params.id);
+
+  if (!job) {
+    return res.status(404).json({ message: 'Job not found' });
+  }
+
+  return res.json({
+    message: 'Job fetched successfully',
+    job,
   });
 });
 
