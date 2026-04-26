@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth.routes');
+const frontendRoutes = require('./routes/frontend');
 const healthRoutes = require('./routes/health');
 const jobRoutes = require('./routes/jobs');
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/frontend', frontendRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/jobs', jobRoutes);
 
