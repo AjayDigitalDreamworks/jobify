@@ -1,3 +1,9 @@
+/*
+  PHASE 2.2: CREATE + GET PROFILE API
+  Completed: 2026-05-29
+  Note: Added this comment to record phase work for Git history.
+*/
+
 const Profile = require('../models/profile.model');
 
 const pickProfileFields = (body = {}) => {
