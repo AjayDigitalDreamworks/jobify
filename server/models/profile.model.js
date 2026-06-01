@@ -5,10 +5,13 @@ const skillSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
+      lowercase: true,
       required: [true, 'Skill name is required'],
     },
     level: {
       type: String,
+      trim: true,
+      lowercase: true,
       enum: ['beginner', 'intermediate', 'advanced'],
       default: 'beginner',
     },
@@ -131,6 +134,13 @@ const profileSchema = new mongoose.Schema(
     skills: {
       type: [skillSchema],
       default: [],
+      validate: {
+        validator(skills) {
+          const skillNames = skills.map((skill) => skill.name);
+          return skillNames.length === new Set(skillNames).size;
+        },
+        message: 'Duplicate skills are not allowed',
+      },
     },
     experience: {
       type: [experienceSchema],
