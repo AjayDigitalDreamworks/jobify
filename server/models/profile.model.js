@@ -19,18 +19,8 @@ const skillSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const experienceSchema = new mongoose.Schema(
+const durationSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      trim: true,
-      required: [true, 'Experience title is required'],
-    },
-    company: {
-      type: String,
-      trim: true,
-      required: [true, 'Company name is required'],
-    },
     startDate: {
       type: Date,
       required: [true, 'Start date is required'],
@@ -38,6 +28,30 @@ const experienceSchema = new mongoose.Schema(
     endDate: {
       type: Date,
       default: null,
+    },
+    isCurrent: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { _id: false }
+);
+
+const experienceSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      trim: true,
+      required: [true, 'Experience role is required'],
+    },
+    company: {
+      type: String,
+      trim: true,
+      required: [true, 'Company name is required'],
+    },
+    duration: {
+      type: durationSchema,
+      required: [true, 'Experience duration is required'],
     },
     description: {
       type: String,
@@ -63,6 +77,18 @@ const projectSchema = new mongoose.Schema(
     techStack: {
       type: [String],
       default: [],
+      set(techStack) {
+        if (!Array.isArray(techStack)) {
+          return techStack;
+        }
+
+        return [...new Set(
+          techStack
+            .filter((technology) => typeof technology === 'string')
+            .map((technology) => technology.trim().toLowerCase())
+            .filter(Boolean)
+        )];
+      },
     },
     link: {
       type: String,
