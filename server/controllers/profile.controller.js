@@ -9,7 +9,7 @@ const Profile = require('../models/profile.model');
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
 const buildExperienceKey = (experience = {}) => (
-  `${normalizeKey(experience.title)}::${normalizeKey(experience.company)}` //"sde::google"
+  `${normalizeKey(experience.role)}::${normalizeKey(experience.company)}` //"sde::google"
 );
 
 const mergeArrayByKey = (existingItems = [], incomingItems = [], getKey) => {
