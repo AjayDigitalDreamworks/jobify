@@ -5,6 +5,11 @@
 */
 
 const Profile = require('../models/profile.model');
+const {
+  deleteCloudinaryAsset,
+  isCloudinaryConfigured,
+  uploadBufferToCloudinary,
+} = require('../config/cloudinary');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -56,7 +61,6 @@ const pickProfileFields = (body = {}) => {
     experience,
     projects,
     education,
-    resume,
   } = body;
 
   return {
@@ -65,7 +69,6 @@ const pickProfileFields = (body = {}) => {
     ...(experience !== undefined && { experience }),
     ...(projects !== undefined && { projects }),
     ...(education !== undefined && { education }),
-    ...(resume !== undefined && { resume }),
   };
 };
 
@@ -172,8 +175,62 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const uploadResume = async (req, res) => {
+  let uploadedPublicId = null;
+
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Resume PDF file is required' });
+    }
+
+    if (!isCloudinaryConfigured()) {
+      return res.status(500).json({ message: 'Cloudinary is not configured' });
+    }
+
+    const userId = req.user._id;
+    const profile = await Profile.findOne({ userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    const oldPublicId = profile.resume?.publicId;
+    const uploadResult = await uploadBufferToCloudinary(req.file.buffer, {
+      folder: 'jobify/resumes',
+      public_id: `resume-${userId}-${Date.now()}`,
+      resource_type: 'raw',
+      type: 'upload',
+      overwrite: false,
+    });
+    uploadedPublicId = uploadResult.public_id;
+
+    profile.resume = {
+      url: uploadResult.secure_url,
+      publicId: uploadResult.public_id,
+    };
+
+    await profile.save();
+
+    if (oldPublicId && oldPublicId !== uploadResult.public_id) {
+      await deleteCloudinaryAsset(oldPublicId).catch(() => {});
+    }
+
+    return res.status(200).json({
+      message: 'Resume uploaded successfully',
+      resume: profile.resume,
+    });
+  } catch (error) {
+    if (uploadedPublicId) {
+      await deleteCloudinaryAsset(uploadedPublicId).catch(() => {});
+    }
+
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   createProfile,
   getMyProfile,
   updateProfile,
+  uploadResume,
 };
