@@ -3,6 +3,8 @@ const router = express.Router();
 const authMiddleware = require('../middleware/auth.middleware');
 const authorizeRoles = require('../middleware/role.middleware');
 const { getJobById, jobs } = require('../data/frontendData');
+const validate = require('../middleware/validate.middleware');
+const { jobCreateSchema } = require('../validators/schemas');
 
 // GET all jobs
 router.get('/', (req, res) => {
@@ -26,7 +28,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST create a new job
-router.post('/', authMiddleware, authorizeRoles('recruiter'), (req, res) => {
+router.post('/', authMiddleware, authorizeRoles('recruiter'), validate(jobCreateSchema), (req, res) => {
   res.status(201).json({
     message: 'Job created successfully',
     data: req.body
