@@ -13,6 +13,12 @@ const {
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
+const ensureOwnership = (userId, requestUserId) => {
+  if (userId.toString() !== requestUserId.toString()) {
+    throw new Error('Unauthorized: You can only access your own profile');
+  }
+};
+
 const buildExperienceKey = (experience = {}) => (
   `${normalizeKey(experience.role)}::${normalizeKey(experience.company)}` //"sde::google"
 );
@@ -113,11 +119,16 @@ const getMyProfile = async (req, res) => {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
+    ensureOwnership(profile.userId, userId);
+
     return res.status(200).json({
       message: 'Profile fetched successfully',
       profile,
     });
   } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -130,6 +141,8 @@ const updateProfile = async (req, res) => {
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
+
+    ensureOwnership(profile.userId, userId);
 
     const {
       bio,
@@ -167,6 +180,10 @@ const updateProfile = async (req, res) => {
       profile,
     });
   } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
+
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: error.message });
     }
@@ -193,6 +210,8 @@ const uploadResume = async (req, res) => {
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
+
+    ensureOwnership(profile.userId, userId);
 
     const oldPublicId = profile.resume?.publicId;
     const uploadResult = await uploadBufferToCloudinary(req.file.buffer, {
@@ -222,6 +241,10 @@ const uploadResume = async (req, res) => {
   } catch (error) {
     if (uploadedPublicId) {
       await deleteCloudinaryAsset(uploadedPublicId).catch(() => {});
+    }
+
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
     }
 
     return res.status(500).json({ message: 'Internal Server Error' });
