@@ -1,67 +1,78 @@
-// models/Job.js
-// Example Job model for MongoDB
-
 const mongoose = require('mongoose');
 
-const jobSchema = new mongoose.Schema(
+const JobSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, 'Job title is required'],
       trim: true,
-    },
-    description: {
-      type: String,
-      required: true,
+      maxlength: [100, 'Job title cannot be more than 100 characters'],
     },
     company: {
       type: String,
-      required: true,
+      required: [true, 'Company name is required'],
       trim: true,
+      maxlength: [50, 'Company name cannot be more than 50 characters'],
+    },
+    description: {
+      type: String,
+      required: [true, 'Job description is required'],
+      maxlength: [1000, 'Job description cannot be more than 1000 characters'],
     },
     location: {
       type: String,
-      required: true,
+      required: [true, 'Location is required'],
+      trim: true,
+      maxlength: [50, 'Location cannot be more than 50 characters'],
     },
-    salary: {
-      min: {
-        type: Number,
-      },
-      max: {
-        type: Number,
-      },
-      currency: {
-        type: String,
-        default: 'USD',
-      },
-    },
-    jobType: {
+    employmentType: {
       type: String,
-      enum: ['Full-time', 'Part-time', 'Contract', 'Internship'],
-      required: true,
+      enum: ['Full-time', 'Part-time', 'Internship', 'Contract'], // Added 'Contract' as a common type
+      required: [true, 'Employment type is required'],
     },
-    experience: {
+    workMode: {
       type: String,
-      enum: ['Entry Level', 'Mid Level', 'Senior Level'],
+      enum: ['Remote', 'Hybrid', 'Onsite'],
+      required: [true, 'Work mode is required'],
     },
-    skills: [
-      {
-        type: String,
+    salaryMin: {
+      type: Number,
+      required: [true, 'Minimum salary is required'],
+      min: [0, 'Minimum salary cannot be negative'],
+    },
+    salaryMax: {
+      type: Number,
+      required: [true, 'Maximum salary is required'],
+      min: [0, 'Maximum salary cannot be negative'],
+      validate: {
+        validator: function (value) {
+          return this.salaryMin <= value;
+        },
+        message: 'Maximum salary ({VALUE}) must be greater than or equal to minimum salary',
       },
-    ],
-    postedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
     },
-    status: {
+    skillsRequired: {
+      type: [String],
+      default: [],
+    },
+    experienceLevel: {
       type: String,
-      enum: ['Active', 'Closed', 'Draft'],
-      default: 'Active',
+      enum: ['Entry-level', 'Junior', 'Mid-level', 'Senior', 'Lead', 'Director'], // Common experience levels
+      required: [true, 'Experience level is required'],
+    },
+    createdBy: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User', // References the User model
+      required: [true, 'Job must be created by a user'],
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   {
-    timestamps: true,
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
   }
 );
 
-module.exports = mongoose.model('Job', jobSchema);
+module.exports = mongoose.model('Job', JobSchema);
