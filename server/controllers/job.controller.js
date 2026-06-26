@@ -30,7 +30,7 @@ const createJob = async (req, res) => {
  */
 const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({});
+    const jobs = await Job.find({}).select('title company location');
     return res.status(200).json({
       success: true,
       count: jobs.length,
