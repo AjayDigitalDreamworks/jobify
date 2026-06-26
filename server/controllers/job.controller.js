@@ -48,7 +48,7 @@ const getAllJobs = async (req, res) => {
  */
 const getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await Job.findById(req.params.id).select('title description salaryMin salaryMax skillsRequired company');
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
