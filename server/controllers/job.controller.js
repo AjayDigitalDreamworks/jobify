@@ -48,7 +48,9 @@ const getAllJobs = async (req, res) => {
  */
 const getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id).select('title description salaryMin salaryMax skillsRequired company');
+    const job = await Job.findById(req.params.id).select(
+      'title description salaryMin salaryMax skillsRequired company'
+    );
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
@@ -62,8 +64,44 @@ const getJobById = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Update a job by ID
+ * @route   PUT /api/jobs/:id
+ * @access  Private (Recruiter only, owner only)
+ */
+const updateJob = async (req, res) => {
+  try {
+    const { id: jobId } = req.params;
+    const { _id: userId } = req.user;
+
+    let job = await Job.findById(jobId);
+
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+
+    // Ownership check: Ensure the job's creator matches the authenticated user
+    if (job.createdBy.toString() !== userId.toString()) {
+      return res.status(403).json({ success: false, message: 'You are not authorized to update this job' });
+    }
+
+    job = await Job.findByIdAndUpdate(jobId, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, // Run Mongoose validators on the update operation
+    });
+    return res.status(200).json({ success: true, job });
+  } catch (error) {
+    // Handle invalid ObjectId format
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid job ID' });
+    }
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createJob,
   getAllJobs,
-  getJobById,
+  getJobById, // Export the new updateJob function
+  updateJob,
 };

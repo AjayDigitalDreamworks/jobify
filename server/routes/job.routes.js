@@ -1,7 +1,7 @@
 const express = require('express');
-const { createJob, getAllJobs, getJobById } = require('../controllers/job.controller');
-const { protect } = require('../middleware/auth.middleware'); // Assuming protect middleware exists
-const { authorize } = require('../middleware/role.middleware'); // Assuming authorize middleware exists
+const { createJob, getAllJobs, getJobById, updateJob } = require('../controllers/job.controller');
+const { protect } = require('../middleware/auth.middleware');
+const { authorize } = require('../middleware/role.middleware');
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.route('/')
   .post(protect, authorize('recruiter'), createJob); // POST create a new job (Recruiter only)
 
 // Routes for /api/jobs/:id
-router.route('/:id').get(getJobById); // GET single job by ID (Public)
+router.route('/:id')
+  .get(getJobById) // GET single job by ID (Public)
+  .put(protect, authorize('recruiter'), updateJob); // PUT update a job by ID (Recruiter only, owner only)
 
 module.exports = router;
