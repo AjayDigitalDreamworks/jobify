@@ -1,4 +1,4 @@
-const Job = require('../models/Job');
+const Job = require('../models/job.model');
 
 /**
  * @desc    Create a new job
@@ -30,23 +30,58 @@ const createJob = async (req, res) => {
  */
 const getAllJobs = async (req, res) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1; //parseInt to convert string to number, default to 1 if not provided
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const skip = (page - 1) * limit;
+    const {
+      page = 1,
+      limit = 10,
+      skills,
+      salaryMin,
+      salaryMax,
+      employmentType,
+      workMode,
+    } = req.query;
 
-    const totalJobs = await Job.countDocuments({});
-    const jobs = await Job.find({})
+    const queryObject = {};
+
+    if (skills) {
+      // Assuming skills can be comma-separated, e.g., "react,node"
+      // We want jobs that require ANY of the specified skills
+      const skillsArray = skills.split(',').map((skill) => skill.trim());
+      queryObject.skillsRequired = { $in: skillsArray }; //MongoDB me iska matlab hota hai Jo jobs me inme se koi bhi ek skill ho.
+    } 
+
+    if (salaryMin) {
+      queryObject.salaryMax = { $gte: parseInt(salaryMin, 10) }; //$gte means greater than or equal to the specified minimum salary.
+    }
+
+    if (salaryMax) {
+      queryObject.salaryMin = { ...queryObject.salaryMin, $lte: parseInt(salaryMax, 10) }; //$lte means less than or equal to the specified maximum salary.
+    }
+
+    if (employmentType) {
+      queryObject.employmentType = employmentType;
+    }
+
+    if (workMode) {
+      queryObject.workMode = workMode;
+    }
+
+    const parsedPage = parseInt(page, 10);
+    const parsedLimit = parseInt(limit, 10);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const totalJobs = await Job.countDocuments(queryObject); //Sirf filtered jobs count hongi.
+    const jobs = await Job.find(queryObject)
       .select('title company location')
       .skip(skip)
-      .limit(limit);
+      .limit(parsedLimit);
 
-    const totalPages = Math.ceil(totalJobs / limit);
+    const totalPages = Math.ceil(totalJobs / parsedLimit);
 
     return res.status(200).json({
       success: true,
       jobs,
       totalJobs,
-      currentPage: page,
+      currentPage: parsedPage,
       totalPages,
     });
   } catch (error) {
