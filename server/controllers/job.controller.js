@@ -38,6 +38,7 @@ const getAllJobs = async (req, res) => {
       salaryMax,
       employmentType,
       workMode,
+      search,
     } = req.query;
 
     const queryObject = {};
@@ -63,6 +64,16 @@ const getAllJobs = async (req, res) => {
 
     if (workMode) {
       queryObject.workMode = workMode;
+    }
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i'); // Regular Expression (Regex) ek pattern hota hai jo text me matching karta hai. 'i' for case-insensitive search
+      queryObject.$or = [ // $or -> Inme se koi bhi condition true ho to document return kar do.
+        { title: { $regex: searchRegex } },
+        { company: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+        { skillsRequired: { $regex: searchRegex } },
+      ];
     }
 
     const parsedPage = parseInt(page, 10);
