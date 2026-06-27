@@ -30,11 +30,24 @@ const createJob = async (req, res) => {
  */
 const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({}).select('title company location');
+    const page = parseInt(req.query.page, 10) || 1; //parseInt to convert string to number, default to 1 if not provided
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalJobs = await Job.countDocuments({});
+    const jobs = await Job.find({})
+      .select('title company location')
+      .skip(skip)
+      .limit(limit);
+
+    const totalPages = Math.ceil(totalJobs / limit);
+
     return res.status(200).json({
       success: true,
-      count: jobs.length,
       jobs,
+      totalJobs,
+      currentPage: page,
+      totalPages,
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
