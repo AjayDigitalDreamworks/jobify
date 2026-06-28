@@ -1,7 +1,7 @@
 const express = require('express');
-const { createJob, getAllJobs, getJobById, updateJob, deleteJob } = require('../controllers/job.controller');
-const { protect } = require('../middleware/auth.middleware');
-const { authorize } = require('../middleware/role.middleware');
+const { createJob, getAllJobs, getJobById, updateJob, closeJob, deleteJob } = require('../controllers/job.controller');
+const protect = require('../middleware/auth.middleware');
+const authorize = require('../middleware/role.middleware');
 
 const router = express.Router();
 
@@ -15,5 +15,7 @@ router.route('/:id')
   .get(getJobById) // GET single job by ID (Public)
   .put(protect, authorize('recruiter'), updateJob) // PUT update a job by ID (Recruiter only, owner only)
   .delete(protect, authorize('recruiter'), deleteJob); // DELETE a job by ID (Recruiter only, owner only)
+
+router.patch('/:id/close', protect, authorize('recruiter'), closeJob); // PATCH close a job by ID (Recruiter only, owner only)
 
 module.exports = router;
