@@ -6,7 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const frontendRoutes = require('./routes/frontend');
 const healthRoutes = require('./routes/health');
-const jobRoutes = require('./routes/jobs');
+const jobRoutes = require('./routes/job.routes');
 const profileRoutes = require('./routes/profile.routes');
 
 const app = express();
