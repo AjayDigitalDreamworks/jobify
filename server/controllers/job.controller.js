@@ -126,6 +126,26 @@ const getAllJobs = async (req, res) => {
 };
 
 /**
+ * @desc    Get jobs created by the authenticated recruiter
+ * @route   GET /api/jobs/my-jobs
+ * @access  Private (Recruiter only)
+ */
+const getMyJobs = async (req, res) => {
+  try {
+    const { _id: recruiterId } = req.user;
+
+    const jobs = await Job.find({ createdBy: recruiterId }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      jobs,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
  * @desc    Close a job by ID
  * @route   PATCH /api/jobs/:id/close
  * @access  Private (Recruiter only, owner only)
@@ -258,6 +278,7 @@ const deleteJob = async (req, res) => {
 module.exports = {
   createJob,
   getAllJobs,
+  getMyJobs,
   getJobById,
   updateJob,
   closeJob,
