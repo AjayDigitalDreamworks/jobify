@@ -1,5 +1,5 @@
 const express = require('express');
-const { createJob, getAllJobs, getJobById, updateJob, closeJob, deleteJob } = require('../controllers/job.controller');
+const { createJob, getAllJobs, getMyJobs, getJobById, updateJob, closeJob, deleteJob } = require('../controllers/job.controller');
 const protect = require('../middleware/auth.middleware');
 const authorize = require('../middleware/role.middleware');
 
@@ -9,6 +9,8 @@ const router = express.Router();
 router.route('/')
   .get(getAllJobs) // GET all jobs (Public)
   .post(protect, authorize('recruiter'), createJob); // POST create a new job (Recruiter only)
+
+router.get('/my-jobs', protect, authorize('recruiter'), getMyJobs); // GET recruiter jobs (Recruiter only)
 
 // Routes for /api/jobs/:id
 router.route('/:id')
