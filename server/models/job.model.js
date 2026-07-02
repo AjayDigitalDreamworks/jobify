@@ -53,7 +53,13 @@ const JobSchema = new mongoose.Schema(
     },
     skillsRequired: {
       type: [String],
-      default: [],
+      required: [true, 'At least one skill is required'],
+      validate: {
+        validator: function (value) {
+          return Array.isArray(value) && value.length > 0 && value.every((skill) => typeof skill === 'string' && skill.trim().length > 0);
+        },
+        message: 'At least one skill is required',
+      },
     },
     experienceLevel: {
       type: String,
