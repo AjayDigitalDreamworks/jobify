@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "profile:test": "node scripts/test-profile-entry.js"
+    "profile:test": "node scripts/test-profile-entry.js",
+    "job:test": "node scripts/test-job-validation.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
