@@ -1,5 +1,13 @@
 const { z } = require('zod');
 
+const trimmedRequiredString = (fieldName) =>
+  z.string().trim().min(1, `${fieldName} is required`);
+
+const salaryNumber = (fieldName) =>
+  z.coerce.number({
+    invalid_type_error: `${fieldName} must be a number`,
+  }).min(0, `${fieldName} cannot be negative`);
+
 const registerSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
@@ -12,23 +20,43 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-const salarySchema = z.object({
-  min: z.number().nullable().optional(),
-  max: z.number().nullable().optional(),
-  currency: z.string().optional(),
+const jobFieldsSchema = z.object({
+  title: trimmedRequiredString('Title'),
+  description: trimmedRequiredString('Description'),
+  company: trimmedRequiredString('Company'),
+  location: trimmedRequiredString('Location'),
+  employmentType: z.enum(['Full-time', 'Part-time', 'Internship', 'Contract']),
+  workMode: z.enum(['Remote', 'Hybrid', 'Onsite']),
+  salaryMin: salaryNumber('Minimum salary'),
+  salaryMax: salaryNumber('Maximum salary'),
+  skillsRequired: z
+    .array(trimmedRequiredString('Skill'))
+    .min(1, 'At least one skill is required'),
+  experienceLevel: z.enum(['Entry-level', 'Junior', 'Mid-level', 'Senior', 'Lead', 'Director']),
 });
 
-const jobCreateSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  company: z.string().min(1),
-  location: z.string().min(1),
-  salary: salarySchema.optional(),
-  jobType: z.enum(['Full-time', 'Part-time', 'Contract', 'Internship']),
-  experience: z.enum(['Entry Level', 'Mid Level', 'Senior Level']).optional(),
-  skills: z.array(z.string()).optional(),
-  postedBy: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
-  status: z.enum(['Active', 'Closed', 'Draft']).optional(),
+const jobCreateSchema = jobFieldsSchema.strict().superRefine((data, ctx) => {
+  if (data.salaryMax < data.salaryMin) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Maximum salary must be greater than or equal to minimum salary',
+      path: ['salaryMax'],
+    });
+  }
+});
+
+const jobUpdateSchema = jobFieldsSchema.partial().strict().superRefine((data, ctx) => {
+  if (
+    data.salaryMin !== undefined &&
+    data.salaryMax !== undefined &&
+    data.salaryMax < data.salaryMin
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Maximum salary must be greater than or equal to minimum salary',
+      path: ['salaryMax'],
+    });
+  }
 });
 
 const durationSchema = z.object({
@@ -78,6 +106,7 @@ module.exports = {
   registerSchema,
   loginSchema,
   jobCreateSchema,
+  jobUpdateSchema,
   profileCreateSchema,
   profileUpdateSchema,
 };
