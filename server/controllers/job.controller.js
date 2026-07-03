@@ -217,7 +217,7 @@ const updateJob = async (req, res) => {
     const { id: jobId } = req.params;
     const { _id: userId } = req.user;
 
-    let job = await Job.findById(jobId);
+    const job = await Job.findById(jobId);
 
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
@@ -228,10 +228,9 @@ const updateJob = async (req, res) => {
       return res.status(403).json({ success: false, message: 'You are not authorized to update this job' });
     }
 
-    job = await Job.findByIdAndUpdate(jobId, req.body, {
-      new: true, // Return the updated document
-      runValidators: true, // Run Mongoose validators on the update operation
-    });
+    Object.assign(job, req.body);
+    await job.save();
+
     return res.status(200).json({ success: true, job });
   } catch (error) {
     // Handle invalid ObjectId format
