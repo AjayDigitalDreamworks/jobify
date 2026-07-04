@@ -21,7 +21,7 @@ const applyForJob = async (req, res) => {
     const existingApplication = await Application.findOne({ applicant, job: jobId });
 
     if (existingApplication) {
-      return res.status(409).json({ success: false, message: 'You have already applied for this job' });
+      return res.status(409).json({ success: false, message: 'Already Applied' });
     }
 
     const application = await Application.create({
@@ -44,7 +44,7 @@ const applyForJob = async (req, res) => {
     }
 
     if (error.code === 11000) {
-      return res.status(409).json({ success: false, message: 'You have already applied for this job' });
+      return res.status(409).json({ success: false, message: 'Already Applied' });
     }
 
     return res.status(500).json({ success: false, message: error.message });
