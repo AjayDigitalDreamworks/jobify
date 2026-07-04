@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth.routes');
 const frontendRoutes = require('./routes/frontend');
 const healthRoutes = require('./routes/health');
 const jobRoutes = require('./routes/job.routes');
+const applicationRoutes = require('./routes/application.routes');
 const profileRoutes = require('./routes/profile.routes');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/frontend', frontendRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
 app.use('/api/profile', profileRoutes);
 
 app.use((err, req, res, next) => {
