@@ -51,6 +51,34 @@ const applyForJob = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get logged-in user's applications
+ * @route   GET /api/applications/my
+ * @access  Private (jobSeeker only)
+ */
+const getMyApplications = async (req, res) => {
+  try {
+    const { _id: applicant } = req.user;
+
+    const applications = await Application.find({ applicant })
+      .populate('job', 'title company')
+      .sort({ appliedAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      applications: applications.map((application) => ({
+        _id: application._id,
+        job: application.job,
+        appliedAt: application.appliedAt,
+        status: application.status,
+      })),
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   applyForJob,
+  getMyApplications,
 };
