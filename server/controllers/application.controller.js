@@ -78,7 +78,61 @@ const getMyApplications = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get a single application by ID
+ * @route   GET /api/applications/:id
+ * @access  Private (jobSeeker only)
+ */
+const getApplicationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { _id: applicant } = req.user;
+
+    const application = await Application.findById(id).populate('job', 'title company location employmentType workMode');
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    if (application.applicant.toString() !== applicant.toString()) {
+      return res.status(403).json({ success: false, message: 'Forbidden: insufficient access' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      application: {
+        _id: application._id,
+        job: application.job,
+        status: application.status,
+        resumeUrl: application.resumeUrl,
+        coverLetter: application.coverLetter,
+        appliedAt: application.appliedAt,
+        updatedAt: application.updatedAt,
+        timeline: [
+          {
+            label: 'Applied',
+            at: application.appliedAt,
+            status: 'applied',
+          },
+          {
+            label: application.status === 'applied' ? 'Application Submitted' : 'Status Updated',
+            at: application.updatedAt,
+            status: application.status,
+          },
+        ],
+      },
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid application ID' });
+    }
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   applyForJob,
   getMyApplications,
+  getApplicationById,
 };
