@@ -1,5 +1,6 @@
 const express = require('express');
 const { createJob, getAllJobs, getMyJobs, getJobById, updateJob, closeJob, deleteJob } = require('../controllers/job.controller');
+const { getJobApplications } = require('../controllers/application.controller');
 const protect = require('../middleware/auth.middleware');
 const authorize = require('../middleware/role.middleware');
 const validate = require('../middleware/validate.middleware');
@@ -13,6 +14,9 @@ router.route('/')
   .post(protect, authorize('recruiter'), validate(jobCreateSchema), createJob); // POST create a new job (Recruiter only)
 
 router.get('/my-jobs', protect, authorize('recruiter'), getMyJobs); // GET recruiter jobs (Recruiter only)
+
+// Routes for /api/jobs/:id/applications
+router.get('/:id/applications', protect, authorize('recruiter'), getJobApplications); // GET applications for a job (Recruiter only, owner only)
 
 // Routes for /api/jobs/:id
 router.route('/:id')
