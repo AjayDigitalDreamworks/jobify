@@ -1,7 +1,7 @@
 const express = require('express');
 const protect = require('../middleware/auth.middleware');
 const authorize = require('../middleware/role.middleware');
-const { applyForJob, getMyApplications, getApplicationById } = require('../controllers/application.controller');
+const { applyForJob, getMyApplications, getApplicationById, updateApplicationStatus } = require('../controllers/application.controller');
 
 const router = express.Router();
 
@@ -9,5 +9,6 @@ const router = express.Router();
 router.post('/apply/:jobId', protect, authorize('jobSeeker'), applyForJob);
 router.get('/my', protect, authorize('jobSeeker'), getMyApplications);
 router.get('/:id', protect, authorize('jobSeeker'), getApplicationById);
+router.patch('/:id/status', protect, authorize('recruiter'), updateApplicationStatus);
 
 module.exports = router;
