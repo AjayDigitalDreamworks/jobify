@@ -179,9 +179,56 @@ const getJobApplications = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Update application status (Recruiter only)
+ * @route   PATCH /api/applications/:id/status
+ * @access  Private (recruiter only, owner only)
+ */
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const { _id: recruiterId } = req.user;
+
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required' });
+    }
+
+    const application = await Application.findById(id).populate('job', 'createdBy');
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    if (application.job.createdBy.toString() !== recruiterId.toString()) {
+      return res.status(403).json({ success: false, message: 'Forbidden: you can only update applications for your jobs' });
+    }
+
+    application.status = status;
+    await application.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Application status updated successfully',
+      application,
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid application ID' });
+    }
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   applyForJob,
   getMyApplications,
   getApplicationById,
   getJobApplications,
+  updateApplicationStatus,
 };
