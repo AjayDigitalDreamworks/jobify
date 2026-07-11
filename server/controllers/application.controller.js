@@ -131,8 +131,57 @@ const getApplicationById = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get all applications for a specific job (Recruiter only)
+ * @route   GET /api/jobs/:jobId/applications
+ * @access  Private (recruiter only, owner only)
+ */
+const getJobApplications = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const { _id: recruiterId } = req.user;
+
+    const job = await Job.findById(jobId).select('createdBy');
+
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+
+    if (job.createdBy.toString() !== recruiterId.toString()) {
+      return res.status(403).json({ success: false, message: 'Forbidden: you can only view applications for your jobs' });
+    }
+
+    const applications = await Application.find({ job: jobId })
+      .populate('applicant', 'name email')
+      .sort({ appliedAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      applications: applications.map((application) => ({
+        _id: application._id,
+        candidate: {
+          _id: application.applicant._id,
+          name: application.applicant.name,
+          email: application.applicant.email,
+        },
+        resumeUrl: application.resumeUrl,
+        appliedAt: application.appliedAt,
+        status: application.status,
+        coverLetter: application.coverLetter,
+      })),
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid job ID' });
+    }
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   applyForJob,
   getMyApplications,
   getApplicationById,
+  getJobApplications,
 };
