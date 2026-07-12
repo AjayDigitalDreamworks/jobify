@@ -1,6 +1,23 @@
 const Job = require('../models/job.model');
 const Application = require('../models/application.model');
 
+const buildTimeline = (application) => {
+  if (Array.isArray(application.timeline) && application.timeline.length > 0) {
+    return application.timeline;
+  }
+
+  return [
+    {
+      status: 'applied',
+      at: application.appliedAt,
+    },
+    {
+      status: application.status,
+      at: application.updatedAt,
+    },
+  ];
+};
+
 /**
  * @desc    Apply for a job
  * @route   POST /api/applications/apply/:jobId
@@ -31,6 +48,7 @@ const applyForJob = async (req, res) => {
       resumeUrl,
       matchScore,
       notes,
+      timeline: [{ status: 'applied', at: new Date() }],
     });
 
     return res.status(201).json({
@@ -108,18 +126,7 @@ const getApplicationById = async (req, res) => {
         coverLetter: application.coverLetter,
         appliedAt: application.appliedAt,
         updatedAt: application.updatedAt,
-        timeline: [
-          {
-            label: 'Applied',
-            at: application.appliedAt,
-            status: 'applied',
-          },
-          {
-            label: application.status === 'applied' ? 'Application Submitted' : 'Status Updated',
-            at: application.updatedAt,
-            status: application.status,
-          },
-        ],
+        timeline: buildTimeline(application),
       },
     });
   } catch (error) {
@@ -204,7 +211,13 @@ const updateApplicationStatus = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Forbidden: you can only update applications for your jobs' });
     }
 
-    application.status = status;
+    const normalizedStatus = status.toLowerCase();
+
+    if (application.status !== normalizedStatus) {
+      application.timeline.push({ status: normalizedStatus, at: new Date() });
+    }
+
+    application.status = normalizedStatus;
     await application.save();
 
     return res.status(200).json({
