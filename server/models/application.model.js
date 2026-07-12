@@ -1,5 +1,22 @@
 const mongoose = require('mongoose');
 
+const applicationTimelineSchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      enum: ['applied', 'shortlisted', 'interviewing', 'rejected', 'withdrawn'],
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    at: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
 const applicationSchema = new mongoose.Schema(
   {
     applicant: {
@@ -46,6 +63,10 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: '',
+    },
+    timeline: {
+      type: [applicationTimelineSchema],
+      default: [],
     },
   },
   {
