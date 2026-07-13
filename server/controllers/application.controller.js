@@ -238,10 +238,53 @@ const updateApplicationStatus = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Withdraw an application
+ * @route   DELETE /api/applications/:id
+ * @access  Private (jobSeeker only)
+ */
+const withdrawApplication = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { _id: applicant } = req.user;
+
+    const application = await Application.findById(id).populate('job', 'title company');
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    if (application.applicant.toString() !== applicant.toString()) {
+      return res.status(403).json({ success: false, message: 'Forbidden: insufficient access' });
+    }
+
+    if (application.status === 'withdrawn') {
+      return res.status(409).json({ success: false, message: 'Application already withdrawn' });
+    }
+
+    application.status = 'withdrawn';
+    application.timeline.push({ status: 'withdrawn', at: new Date() });
+    await application.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Application withdrawn successfully',
+      application,
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'Invalid application ID' });
+    }
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   applyForJob,
   getMyApplications,
   getApplicationById,
   getJobApplications,
   updateApplicationStatus,
+  withdrawApplication,
 };
