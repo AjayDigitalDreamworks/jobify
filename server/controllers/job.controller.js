@@ -1,4 +1,5 @@
 const Job = require('../models/job.model');
+const Application = require('../models/application.model');
 
 /**
  * @desc    Create a new job
@@ -146,6 +147,81 @@ const getMyJobs = async (req, res) => {
 };
 
 /**
+ * @desc    Get recruiter hiring insights
+ * @route   GET /api/jobs/insights
+ * @access  Private (Recruiter only)
+ */
+const getRecruiterInsights = async (req, res) => {
+  try {
+    const { _id: recruiterId } = req.user;
+
+    const jobs = await Job.find({ createdBy: recruiterId }).select('title company isActive createdAt');
+    const jobIds = jobs.map((job) => job._id);
+
+    const applicationCounts = jobIds.length
+      ? await Application.aggregate([
+          {
+            $match: {
+              job: { $in: jobIds },
+            },
+          },
+          {
+            $group: {
+              _id: '$job',
+              applied: {
+                $sum: 1,
+              },
+              shortlisted: {
+                $sum: {
+                  $cond: [{ $eq: ['$status', 'shortlisted'] }, 1, 0],
+                },
+              },
+              rejected: {
+                $sum: {
+                  $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0],
+                },
+              },
+            },
+          },
+        ])
+      : [];
+
+    const countMap = applicationCounts.reduce((accumulator, item) => {
+      accumulator[item._id.toString()] = item;
+      return accumulator;
+    }, {});
+
+    const insights = jobs.map((job) => {
+      const counts = countMap[job._id.toString()] || {
+        applied: 0,
+        shortlisted: 0,
+        rejected: 0,
+      };
+
+      return {
+        _id: job._id,
+        title: job.title,
+        company: job.company,
+        isActive: job.isActive,
+        createdAt: job.createdAt,
+        applications: {
+          applied: counts.applied,
+          shortlisted: counts.shortlisted,
+          rejected: counts.rejected,
+        },
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      insights,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
  * @desc    Close a job by ID
  * @route   PATCH /api/jobs/:id/close
  * @access  Private (Recruiter only, owner only)
@@ -278,6 +354,7 @@ module.exports = {
   createJob,
   getAllJobs,
   getMyJobs,
+  getRecruiterInsights,
   getJobById,
   updateJob,
   closeJob,
