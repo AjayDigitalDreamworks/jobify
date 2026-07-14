@@ -35,6 +35,10 @@ const applyForJob = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
 
+    if (req.user.role !== 'jobSeeker') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only job seekers can apply' });
+    }
+
     const existingApplication = await Application.findOne({ applicant, job: jobId });
 
     if (existingApplication) {
@@ -78,6 +82,10 @@ const getMyApplications = async (req, res) => {
   try {
     const { _id: applicant } = req.user;
 
+    if (req.user.role !== 'jobSeeker') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only job seekers can view their applications' });
+    }
+
     const applications = await Application.find({ applicant })
       .populate('job', 'title company')
       .sort({ appliedAt: -1 });
@@ -105,6 +113,10 @@ const getApplicationById = async (req, res) => {
   try {
     const { id } = req.params;
     const { _id: applicant } = req.user;
+
+    if (req.user.role !== 'jobSeeker') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only job seekers can view application details' });
+    }
 
     const application = await Application.findById(id).populate('job', 'title company location employmentType workMode');
 
@@ -145,8 +157,12 @@ const getApplicationById = async (req, res) => {
  */
 const getJobApplications = async (req, res) => {
   try {
-    const { jobId } = req.params;
+    const jobId = req.params.jobId || req.params.id;
     const { _id: recruiterId } = req.user;
+
+    if (req.user.role !== 'recruiter') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only recruiters can view applicants' });
+    }
 
     const job = await Job.findById(jobId).select('createdBy');
 
@@ -196,6 +212,10 @@ const updateApplicationStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     const { _id: recruiterId } = req.user;
+
+    if (req.user.role !== 'recruiter') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only recruiters can update application status' });
+    }
 
     if (!status) {
       return res.status(400).json({ success: false, message: 'Status is required' });
@@ -247,6 +267,10 @@ const withdrawApplication = async (req, res) => {
   try {
     const { id } = req.params;
     const { _id: applicant } = req.user;
+
+    if (req.user.role !== 'jobSeeker') {
+      return res.status(403).json({ success: false, message: 'Forbidden: only job seekers can withdraw applications' });
+    }
 
     const application = await Application.findById(id).populate('job', 'title company');
 
