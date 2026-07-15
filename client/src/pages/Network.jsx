@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getRouteForLabel } from "../src/lib/navigation";
+import { getRouteForLabel } from "../lib/navigation";
 
 const navItems = [
   { label: "Dashboard", icon: "⊞" },

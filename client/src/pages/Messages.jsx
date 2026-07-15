@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { getRouteForLabel } from "../src/lib/navigation";
+import { getRouteForLabel } from "../lib/navigation";
 
 const sidebarNav = [
   { icon: "grid", label: "Dashboard" },

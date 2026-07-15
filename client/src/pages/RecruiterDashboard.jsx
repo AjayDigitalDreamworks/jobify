@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getRouteForLabel, ROUTES } from "../src/lib/navigation";
+import { getRouteForLabel, ROUTES } from "../lib/navigation";
 
 function Icon({ name, className = "w-5 h-5" }) {
   const icons = {

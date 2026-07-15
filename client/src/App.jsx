@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import ApplicationsTracker from "../pages/ApplicationsTracker";
-import JobifyDashboard from "../pages/Dashboard";
-import JobDetails from "../pages/JobDetails";
-import JobListings from "../pages/JobListings";
-import JobifyMessages from "../pages/Messages";
-import NetworkPage from "../pages/Network";
-import RecruiterDashboard from "../pages/RecruiterDashboard";
-import ResumeAnalyzer from "../pages/ResumeAnalyser";
+import ApplicationsTracker from "./pages/ApplicationsTracker";
+import JobifyDashboard from "./pages/Dashboard";
+import JobDetails from "./pages/JobDetails";
+import JobListings from "./pages/JobListings";
+import JobifyMessages from "./pages/Messages";
+import NetworkPage from "./pages/Network";
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+import ResumeAnalyzer from "./pages/ResumeAnalyser";
 import { getFrontendData, getHealth, getJobDetail, getJobs } from "./lib/api";
 import { getRouteFromHash, navigateTo, ROUTES } from "./lib/navigation";
 
