@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post('/create', authMiddleware, validate(profileCreateSchema), profileController.createProfile);
 router.get('/me', authMiddleware, profileController.getMyProfile);
+router.get('/ai-ready/:jobId', authMiddleware, profileController.getAIReadyProfileForJob);
 router.put('/update', authMiddleware, validate(profileUpdateSchema), profileController.updateProfile);
 router.post(
   '/resume',
