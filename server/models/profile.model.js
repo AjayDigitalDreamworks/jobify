@@ -138,6 +138,58 @@ const resumeSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    extractedText: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    cleanedText: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    extractedSkills: {
+      type: [String],
+      default: [],
+      set(skills) {
+        if (!Array.isArray(skills)) {
+          return skills;
+        }
+
+        const seen = new Set();
+
+        return skills.reduce((accumulator, skill) => {
+          if (typeof skill !== 'string') {
+            return accumulator;
+          }
+
+          const normalizedSkill = skill.trim();
+          const key = normalizedSkill.toLowerCase();
+
+          if (!normalizedSkill || seen.has(key)) {
+            return accumulator;
+          }
+
+          seen.add(key);
+          accumulator.push(normalizedSkill);
+          return accumulator;
+        }, []);
+      },
+    },
+    pageCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    parser: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    parsedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { _id: false }
 );
