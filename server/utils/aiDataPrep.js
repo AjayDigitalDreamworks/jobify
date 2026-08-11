@@ -84,6 +84,9 @@ const formatProfileForAI = (profileDocument) => {
     resume: {
       hasResume: Boolean(profile.resume?.url),
       url: normalizeString(profile.resume?.url),
+      cleanedText: normalizeString(profile.resume?.cleanedText),
+      extractedSkills: uniqueStrings(profile.resume?.extractedSkills || []),
+      parsedAt: profile.resume?.parsedAt || null,
     },
   };
 };
