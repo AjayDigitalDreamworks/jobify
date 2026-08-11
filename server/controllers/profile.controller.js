@@ -12,6 +12,7 @@ const {
   uploadBufferToCloudinary,
 } = require('../config/cloudinary');
 const { buildAIReadyPayload } = require('../utils/aiDataPrep');
+const { parseResumeBuffer } = require('../utils/resumeParser');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -215,6 +216,8 @@ const uploadResume = async (req, res) => {
 
     ensureOwnership(profile.userId, userId);
 
+    const parsedResume = await parseResumeBuffer(req.file.buffer);
+
     const oldPublicId = profile.resume?.publicId;
     const uploadResult = await uploadBufferToCloudinary(req.file.buffer, {
       folder: 'jobify/resumes',
@@ -228,7 +231,22 @@ const uploadResume = async (req, res) => {
     profile.resume = {
       url: uploadResult.secure_url,
       publicId: uploadResult.public_id,
+      extractedText: parsedResume.extractedText,
+      cleanedText: parsedResume.cleanedText,
+      extractedSkills: parsedResume.extractedSkills,
+      pageCount: parsedResume.pageCount,
+      parser: parsedResume.parser,
+      parsedAt: new Date(),
     };
+
+    profile.skills = mergeArrayByKey(
+      profile.skills,
+      parsedResume.extractedSkills.map((skill) => ({
+        name: skill,
+        level: 'beginner',
+      })),
+      (skill) => normalizeKey(skill.name)
+    );
 
     await profile.save();
 
@@ -237,8 +255,9 @@ const uploadResume = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: 'Resume uploaded successfully',
+      message: 'Resume uploaded and parsed successfully',
       resume: profile.resume,
+      extractedSkills: parsedResume.extractedSkills,
     });
   } catch (error) {
     if (uploadedPublicId) {
@@ -249,7 +268,7 @@ const uploadResume = async (req, res) => {
       return res.status(403).json({ message: error.message });
     }
 
-    return res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: error.message || 'Internal Server Error' });
   }
 };
 
