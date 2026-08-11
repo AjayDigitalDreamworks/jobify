@@ -5,11 +5,13 @@
 */
 
 const Profile = require('../models/profile.model');
+const Job = require('../models/job.model');
 const {
   deleteCloudinaryAsset,
   isCloudinaryConfigured,
   uploadBufferToCloudinary,
 } = require('../config/cloudinary');
+const { buildAIReadyPayload } = require('../utils/aiDataPrep');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -251,9 +253,47 @@ const uploadResume = async (req, res) => {
   }
 };
 
+const getAIReadyProfileForJob = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { jobId } = req.params;
+
+    const [profile, job] = await Promise.all([
+      Profile.findOne({ userId }),
+      Job.findById(jobId).select('title description skillsRequired experienceLevel company isActive'),
+    ]);
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    ensureOwnership(profile.userId, userId);
+
+    if (!job || !job.isActive) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
+    return res.status(200).json({
+      message: 'AI-ready data prepared successfully',
+      data: buildAIReadyPayload({ profile, job }),
+    });
+  } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
+
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid job ID' });
+    }
+
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   createProfile,
   getMyProfile,
   updateProfile,
   uploadResume,
+  getAIReadyProfileForJob,
 };
