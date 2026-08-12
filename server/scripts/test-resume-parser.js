@@ -4,6 +4,7 @@ const {
   cleanResumeText,
   extractSkillsFromText,
   parseResumeBuffer,
+  SKILLS_DATABASE,
 } = require('../utils/resumeParser');
 
 const testCleanResumeText = () => {
@@ -14,6 +15,22 @@ const testCleanResumeText = () => {
 const testExtractSkillsFromText = () => {
   const skills = extractSkillsFromText('Experienced with React, Node.js, MongoDB and Tailwind CSS.');
   assert.deepStrictEqual(skills, ['React', 'Node.js', 'MongoDB', 'Tailwind CSS']);
+};
+
+const testMvpSkillsDatabase = () => {
+  assert.ok(SKILLS_DATABASE.includes('React'));
+  assert.ok(SKILLS_DATABASE.includes('Node.js'));
+  assert.ok(SKILLS_DATABASE.includes('MongoDB'));
+  assert.ok(SKILLS_DATABASE.includes('JavaScript'));
+  assert.ok(SKILLS_DATABASE.includes('Python'));
+  assert.ok(SKILLS_DATABASE.includes('Docker'));
+  assert.ok(SKILLS_DATABASE.includes('AWS'));
+  assert.ok(SKILLS_DATABASE.includes('Java'));
+};
+
+const testPromptExample = () => {
+  const skills = extractSkillsFromText('Built MERN projects using React, Node.js and MongoDB');
+  assert.deepStrictEqual(skills, ['React', 'Node.js', 'MongoDB']);
 };
 
 const testParseResumeBuffer = async () => {
@@ -33,7 +50,9 @@ const testParseResumeBuffer = async () => {
 
 const run = async () => {
   testCleanResumeText();
+  testMvpSkillsDatabase();
   testExtractSkillsFromText();
+  testPromptExample();
   await testParseResumeBuffer();
   console.log('Resume parser test passed');
 };
