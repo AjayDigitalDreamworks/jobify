@@ -1,48 +1,5 @@
 const pdfParse = require('pdf-parse');
-
-const KNOWN_SKILLS = [
-  'React',
-  'Node.js',
-  'MongoDB',
-  'Express.js',
-  'JavaScript',
-  'TypeScript',
-  'HTML',
-  'CSS',
-  'Tailwind CSS',
-  'Bootstrap',
-  'Next.js',
-  'Redux',
-  'Git',
-  'GitHub',
-  'REST API',
-  'GraphQL',
-  'SQL',
-  'MySQL',
-  'PostgreSQL',
-  'Python',
-  'Java',
-  'C',
-  'C++',
-  'C#',
-  'Docker',
-  'Kubernetes',
-  'AWS',
-  'Azure',
-  'GCP',
-  'Firebase',
-  'Mongoose',
-  'JWT',
-  'OAuth',
-  'Machine Learning',
-  'Data Structures',
-  'Algorithms',
-  'Figma',
-  'React Native',
-  'Flutter',
-  'PHP',
-  'Laravel',
-];
+const { SKILLS_DATABASE } = require('../data/skillsDatabase');
 
 const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -57,7 +14,7 @@ const cleanResumeText = (text = '') => text
   .join('\n')
   .trim();
 
-const extractSkillsFromText = (text = '', skillList = KNOWN_SKILLS) => {
+const extractSkillsFromText = (text = '', skillList = SKILLS_DATABASE) => {
   const normalizedText = text.toLowerCase();
   const matchedRanges = [];
   const matchedSkills = [];
@@ -111,7 +68,7 @@ const parseResumeBuffer = async (buffer, parser = pdfParse) => {
 };
 
 module.exports = {
-  KNOWN_SKILLS,
+  SKILLS_DATABASE,
   cleanResumeText,
   extractSkillsFromText,
   parseResumeBuffer,
