@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "profile:test": "node scripts/test-profile-entry.js",
     "job:test": "node scripts/test-job-validation.js",
+    "job-skills:test": "node scripts/test-job-skill-extractor.js",
     "application:test": "node scripts/test-application-workflow.js",
     "resume:test": "node scripts/test-resume-parser.js"
   },

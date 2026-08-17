@@ -3,7 +3,7 @@ const assert = require('assert');
 const authorize = require('../middleware/role.middleware');
 const validate = require('../middleware/validate.middleware');
 const { jobCreateSchema } = require('../validators/schemas');
-const { updateJob, deleteJob } = require('../controllers/job.controller');
+const { createJob, updateJob, deleteJob } = require('../controllers/job.controller');
 const Job = require('../models/job.model');
 
 const validJobPayload = {
@@ -55,6 +55,17 @@ const withMockedFindById = async (mockImplementation, callback) => {
     await callback();
   } finally {
     Job.findById = originalFindById;
+  }
+};
+
+const withMockedCreate = async (mockImplementation, callback) => {
+  const originalCreate = Job.create;
+  Job.create = mockImplementation;
+
+  try {
+    await callback();
+  } finally {
+    Job.create = originalCreate;
   }
 };
 
@@ -135,6 +146,27 @@ const testUnauthorizedEditIsRejected = async () => {
   });
 };
 
+const testCreateExtractsJobSkills = async () => {
+  await withMockedCreate(async (payload) => payload, async () => {
+    const req = {
+      user: {
+        _id: 'recruiter-1',
+      },
+      body: {
+        ...validJobPayload,
+        title: 'React Developer',
+        description: 'Looking for a React Developer with Node.js, MongoDB and Express.',
+      },
+    };
+    const res = createMockResponse();
+
+    await createJob(req, res);
+
+    assert.strictEqual(res.statusCode, 201);
+    assert.deepStrictEqual(res.body.job.extractedSkills, ['React', 'Node.js', 'MongoDB', 'Express']);
+  });
+};
+
 const testUnauthorizedDeleteIsRejected = async () => {
   await withMockedFindById(async () => ({
     createdBy: {
@@ -163,6 +195,7 @@ const run = async () => {
     ['Job seeker creates job', testJobSeekerCannotCreateJob],
     ['Invalid salary', testInvalidSalaryIsRejected],
     ['Empty title', testEmptyTitleIsRejected],
+    ['Create extracts job skills', testCreateExtractsJobSkills],
     ['Unauthorized edit', testUnauthorizedEditIsRejected],
     ['Unauthorized delete', testUnauthorizedDeleteIsRejected],
   ];
