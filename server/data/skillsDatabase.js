@@ -7,6 +7,7 @@ const SKILLS_DATABASE = [
   'Docker',
   'AWS',
   'Java',
+  'Express',
   'Express.js',
   'TypeScript',
   'HTML',
