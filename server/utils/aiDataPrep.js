@@ -98,6 +98,7 @@ const formatJobForAI = (jobDocument) => {
     title: normalizeString(job.title),
     description: normalizeString(job.description),
     skillsRequired: uniqueStrings(job.skillsRequired || []),
+    extractedSkills: uniqueStrings(job.extractedSkills || []),
     experienceLevel: normalizeString(job.experienceLevel),
     company: normalizeString(job.company),
   };
