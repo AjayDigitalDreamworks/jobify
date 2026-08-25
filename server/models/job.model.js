@@ -61,6 +61,34 @@ const JobSchema = new mongoose.Schema(
         message: 'At least one skill is required',
       },
     },
+    extractedSkills: {
+      type: [String],
+      default: [],
+      set(skills) {
+        if (!Array.isArray(skills)) {
+          return skills;
+        }
+
+        const seen = new Set();
+
+        return skills.reduce((accumulator, skill) => {
+          if (typeof skill !== 'string') {
+            return accumulator;
+          }
+
+          const normalizedSkill = skill.trim();
+          const key = normalizedSkill.toLowerCase();
+
+          if (!normalizedSkill || seen.has(key)) {
+            return accumulator;
+          }
+
+          seen.add(key);
+          accumulator.push(normalizedSkill);
+          return accumulator;
+        }, []);
+      },
+    },
     experienceLevel: {
       type: String,
       enum: ['Entry-level', 'Junior', 'Mid-level', 'Senior', 'Lead', 'Director'], // Common experience levels
