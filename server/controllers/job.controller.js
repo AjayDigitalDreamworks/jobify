@@ -1,5 +1,6 @@
 const Job = require('../models/job.model');
 const Application = require('../models/application.model');
+const { extractJobSkills } = require('../utils/jobSkillExtractor');
 
 /**
  * @desc    Create a new job
@@ -11,8 +12,9 @@ const createJob = async (req, res) => {
     // req.user is populated by authMiddleware
     // req.user.role is checked by roleMiddleware('recruiter')
     const { _id: createdBy } = req.user;
+    const { extractedSkills } = extractJobSkills(req.body);
 
-    const job = await Job.create({ ...req.body, createdBy });
+    const job = await Job.create({ ...req.body, createdBy, extractedSkills });
 
     return res.status(201).json({
       success: true,
@@ -108,7 +110,7 @@ const getAllJobs = async (req, res) => {
     const parsedLimit = parseInt(limit, 10);
     const skip = (parsedPage - 1) * parsedLimit;
     const jobs = await Job.find(queryObject)
-      .select('title company location')
+      .select('title company location extractedSkills')
       .skip(skip)
       .limit(parsedLimit);
 
@@ -265,7 +267,7 @@ const closeJob = async (req, res) => {
 const getJobById = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id).select(
-      'title description salaryMin salaryMax skillsRequired company isActive' // Added isActive to selection
+      'title description salaryMin salaryMax skillsRequired extractedSkills company isActive'
     );
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
@@ -305,6 +307,10 @@ const updateJob = async (req, res) => {
     }
 
     Object.assign(job, req.body);
+    job.extractedSkills = extractJobSkills({
+      title: job.title,
+      description: job.description,
+    }).extractedSkills;
     await job.save();
 
     return res.status(200).json({ success: true, job });
