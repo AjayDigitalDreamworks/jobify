@@ -9,6 +9,7 @@
     "profile:test": "node scripts/test-profile-entry.js",
     "job:test": "node scripts/test-job-validation.js",
     "job-skills:test": "node scripts/test-job-skill-extractor.js",
+    "matching:test": "node scripts/test-matching-engine.js",
     "application:test": "node scripts/test-application-workflow.js",
     "resume:test": "node scripts/test-resume-parser.js"
   },

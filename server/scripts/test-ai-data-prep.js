@@ -43,6 +43,7 @@ const profile = {
   resume: {
     url: 'https://cdn.example.com/resume.pdf',
     publicId: 'resume-123',
+    extractedSkills: ['React', 'Node.js', 'MongoDB'],
   },
 };
 
@@ -50,6 +51,7 @@ const job = {
   title: 'Full Stack Developer',
   description: 'Build product features with React and Node.js.',
   skillsRequired: ['React', 'Node.js', 'MongoDB'],
+  extractedSkills: ['React', 'Node.js', 'MongoDB', 'Docker'],
   experienceLevel: 'Junior',
   company: 'Jobify',
 };
@@ -63,6 +65,9 @@ assert.strictEqual(payload.profile.resume.hasResume, true);
 assert.strictEqual(payload.profile.resume.url, 'https://cdn.example.com/resume.pdf');
 assert.ok(payload.profile.experienceYears >= 1);
 assert.deepStrictEqual(payload.job.skillsRequired, ['React', 'Node.js', 'MongoDB']);
+assert.deepStrictEqual(payload.job.extractedSkills, ['React', 'Node.js', 'MongoDB', 'Docker']);
 assert.strictEqual(payload.job.title, 'Full Stack Developer');
+assert.strictEqual(payload.match.matchPercentage, 75);
+assert.deepStrictEqual(payload.match.missingSkills, ['Docker']);
 
 console.log('AI data prep test passed');
