@@ -1,4 +1,5 @@
 const millisecondsPerDay = 1000 * 60 * 60 * 24;
+const { calculateJobMatch } = require('./matchingEngine');
 
 const normalizeString = (value = '') => value.toString().trim();
 
@@ -107,6 +108,7 @@ const formatJobForAI = (jobDocument) => {
 const buildAIReadyPayload = ({ profile, job }) => ({
   profile: formatProfileForAI(profile),
   job: formatJobForAI(job),
+  match: calculateJobMatch({ profile: toPlainObject(profile), job: toPlainObject(job) }),
 });
 
 module.exports = {
