@@ -7,6 +7,7 @@ const SKILLS_DATABASE = [
   'Docker',
   'AWS',
   'Java',
+  'Redis',
   'Express',
   'Express.js',
   'TypeScript',
@@ -43,6 +44,17 @@ const SKILLS_DATABASE = [
   'Laravel',
 ];
 
+const SKILL_ALIASES = {
+  'Node.js': ['Node', 'NodeJS'],
+  MongoDB: ['Mongo'],
+  JavaScript: ['JS'],
+  TypeScript: ['TS'],
+  PostgreSQL: ['Postgres'],
+  Kubernetes: ['K8s'],
+  AWS: ['Amazon Web Services'],
+};
+
 module.exports = {
   SKILLS_DATABASE,
+  SKILL_ALIASES,
 };
