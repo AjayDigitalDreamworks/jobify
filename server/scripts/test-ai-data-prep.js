@@ -69,5 +69,7 @@ assert.deepStrictEqual(payload.job.extractedSkills, ['React', 'Node.js', 'MongoD
 assert.strictEqual(payload.job.title, 'Full Stack Developer');
 assert.strictEqual(payload.match.matchPercentage, 75);
 assert.deepStrictEqual(payload.match.missingSkills, ['Docker']);
+assert.deepStrictEqual(payload.match.skillGap.missingSkills, ['Docker']);
+assert.strictEqual(payload.match.skillGap.learningRecommendations[0].skill, 'Docker');
 
 console.log('AI data prep test passed');
