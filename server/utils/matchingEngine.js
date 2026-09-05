@@ -1,17 +1,36 @@
+const { SKILL_ALIASES } = require('../data/skillsDatabase');
+
+const skillCanonicalMap = Object.entries(SKILL_ALIASES).reduce((accumulator, [canonicalSkill, aliases]) => {
+  accumulator[canonicalSkill.toLowerCase()] = canonicalSkill;
+
+  aliases.forEach((alias) => {
+    accumulator[alias.toLowerCase()] = canonicalSkill;
+  });
+
+  return accumulator;
+}, {});
+
 const normalizeSkill = (skill = '') => skill.toString().trim().toLowerCase();
+
+const canonicalizeSkill = (skill = '') => {
+  const normalizedSkill = normalizeSkill(skill);
+
+  return skillCanonicalMap[normalizedSkill] || skill.toString().trim();
+};
 
 const uniqueSkills = (skills = []) => {
   const seen = new Set();
 
   return skills.reduce((accumulator, skill) => {
-    const normalizedSkill = normalizeSkill(skill);
+    const canonicalSkill = canonicalizeSkill(skill);
+    const normalizedSkill = normalizeSkill(canonicalSkill);
 
     if (!normalizedSkill || seen.has(normalizedSkill)) {
       return accumulator;
     }
 
     seen.add(normalizedSkill);
-    accumulator.push(skill.toString().trim());
+    accumulator.push(canonicalSkill);
     return accumulator;
   }, []);
 };
@@ -50,20 +69,41 @@ const calculateSkillMatch = ({ candidateSkills = [], requiredSkills = [] } = {})
   };
 };
 
+const buildLearningRecommendations = (missingSkills = []) => missingSkills.map((skill) => ({
+  skill,
+  recommendation: `Learn ${skill} fundamentals and build one small project using it.`,
+  status: 'planned',
+}));
+
+const calculateSkillGap = ({ candidateSkills = [], requiredSkills = [] } = {}) => {
+  const skillMatch = calculateSkillMatch({ candidateSkills, requiredSkills });
+
+  return {
+    missingSkills: skillMatch.missingSkills,
+    missingSkillsCount: skillMatch.missingSkills.length,
+    learningRecommendations: buildLearningRecommendations(skillMatch.missingSkills),
+  };
+};
+
 const calculateJobMatch = ({ profile, job } = {}) => {
   const candidateSkills = getCandidateSkills(profile);
   const requiredSkills = getRequiredJobSkills(job);
+  const skillMatch = calculateSkillMatch({ candidateSkills, requiredSkills });
+  const skillGap = calculateSkillGap({ candidateSkills, requiredSkills });
 
   return {
     candidateSkills,
     requiredSkills,
-    ...calculateSkillMatch({ candidateSkills, requiredSkills }),
+    ...skillMatch,
+    skillGap,
   };
 };
 
 module.exports = {
   calculateJobMatch,
+  calculateSkillGap,
   calculateSkillMatch,
+  canonicalizeSkill,
   getCandidateSkills,
   getRequiredJobSkills,
 };
