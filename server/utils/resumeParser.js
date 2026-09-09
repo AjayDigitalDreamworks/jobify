@@ -1,5 +1,5 @@
 const pdfParse = require('pdf-parse');
-const { SKILLS_DATABASE } = require('../data/skillsDatabase');
+const { SKILLS_DATABASE, SKILL_ALIASES } = require('../data/skillsDatabase');
 
 const escapeRegex = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -18,10 +18,14 @@ const extractSkillsFromText = (text = '', skillList = SKILLS_DATABASE) => {
   const normalizedText = text.toLowerCase();
   const matchedRanges = [];
   const matchedSkills = [];
-  const skillsBySpecificity = [...skillList].sort((left, right) => right.length - left.length);
+  const skillSearchTerms = skillList.flatMap((skill) => [
+    { skill, term: skill },
+    ...(SKILL_ALIASES[skill] || []).map((alias) => ({ skill, term: alias })),
+  ]);
+  const skillsBySpecificity = skillSearchTerms.sort((left, right) => right.term.length - left.term.length);
 
-  skillsBySpecificity.forEach((skill) => {
-    const pattern = new RegExp(`(^|[^a-z0-9])(${escapeRegex(skill.toLowerCase())})([^a-z0-9]|$)`, 'gi');
+  skillsBySpecificity.forEach(({ skill, term }) => {
+    const pattern = new RegExp(`(^|[^a-z0-9])(${escapeRegex(term.toLowerCase())})([^a-z0-9]|$)`, 'gi');
     let match = pattern.exec(normalizedText);
 
     while (match) {
@@ -69,6 +73,7 @@ const parseResumeBuffer = async (buffer, parser = pdfParse) => {
 
 module.exports = {
   SKILLS_DATABASE,
+  SKILL_ALIASES,
   cleanResumeText,
   extractSkillsFromText,
   parseResumeBuffer,
