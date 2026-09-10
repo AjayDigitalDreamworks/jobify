@@ -33,6 +33,11 @@ const testPromptExample = () => {
   assert.deepStrictEqual(skills, ['React', 'Node.js', 'MongoDB']);
 };
 
+const testSkillAliases = () => {
+  const skills = extractSkillsFromText('Built APIs with Node, Mongo, Redis and Docker.');
+  assert.deepStrictEqual(skills, ['Node.js', 'MongoDB', 'Redis', 'Docker']);
+};
+
 const testParseResumeBuffer = async () => {
   const fakeParser = async () => ({
     text: 'Frontend Developer\nSkills: React, Node.js, MongoDB',
@@ -53,6 +58,7 @@ const run = async () => {
   testMvpSkillsDatabase();
   testExtractSkillsFromText();
   testPromptExample();
+  testSkillAliases();
   await testParseResumeBuffer();
   console.log('Resume parser test passed');
 };
