@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { calculateJobMatch, calculateSkillMatch } = require('../utils/matchingEngine');
+const { calculateJobMatch, calculateSkillGap, calculateSkillMatch } = require('../utils/matchingEngine');
 
 const testPromptExample = () => {
   const result = calculateSkillMatch({
@@ -11,8 +11,8 @@ const testPromptExample = () => {
   assert.strictEqual(result.commonSkillsCount, 3);
   assert.strictEqual(result.totalRequiredSkills, 5);
   assert.strictEqual(result.matchPercentage, 60);
-  assert.deepStrictEqual(result.matchedSkills, ['React', 'Mongo', 'Git']);
-  assert.deepStrictEqual(result.missingSkills, ['Node', 'Docker']);
+  assert.deepStrictEqual(result.matchedSkills, ['React', 'MongoDB', 'Git']);
+  assert.deepStrictEqual(result.missingSkills, ['Node.js', 'Docker']);
 };
 
 const testProfileAndJobDocuments = () => {
@@ -53,10 +53,25 @@ const testSkillsRequiredFallback = () => {
   assert.deepStrictEqual(result.missingSkills, ['AWS']);
 };
 
+const testSkillGapPromptExample = () => {
+  const result = calculateSkillGap({
+    requiredSkills: ['React', 'Node', 'Mongo', 'Docker', 'Redis'],
+    candidateSkills: ['React', 'Mongo'],
+  });
+
+  assert.deepStrictEqual(result.missingSkills, ['Node.js', 'Docker', 'Redis']);
+  assert.strictEqual(result.missingSkillsCount, 3);
+  assert.deepStrictEqual(
+    result.learningRecommendations.map((item) => item.skill),
+    ['Node.js', 'Docker', 'Redis']
+  );
+};
+
 const run = () => {
   testPromptExample();
   testProfileAndJobDocuments();
   testSkillsRequiredFallback();
+  testSkillGapPromptExample();
   console.log('Matching engine test passed');
 };
 
