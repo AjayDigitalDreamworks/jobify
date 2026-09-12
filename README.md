@@ -73,7 +73,7 @@ Jobify
 ## ⚙️ Setup Instructions
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
 - MongoDB Atlas account (https://www.mongodb.com/cloud/atlas)
 - Git
@@ -101,6 +101,8 @@ npm install
    ```
    MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/jobify?retryWrites=true&w=majority
    JWT_SECRET=your-secret-key
+  OPENAI_API_KEY=your-openai-api-key
+  OPENAI_RESUME_MODEL=gpt-4o-mini
    PORT=5000
    ```
 
