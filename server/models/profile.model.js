@@ -190,6 +190,41 @@ const resumeSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    analysis: {
+      sourceHash: {
+        type: String,
+        trim: true,
+        default: '',
+      },
+      analyzedAt: {
+        type: Date,
+        default: null,
+      },
+      strengths: {
+        type: [String],
+        default: [],
+      },
+      weaknesses: {
+        type: [String],
+        default: [],
+      },
+      missingSkills: {
+        type: [String],
+        default: [],
+      },
+      atsIssues: {
+        type: [String],
+        default: [],
+      },
+      grammarSuggestions: {
+        type: [String],
+        default: [],
+      },
+      recommendations: {
+        type: [String],
+        default: [],
+      },
+    },
   },
   { _id: false }
 );
