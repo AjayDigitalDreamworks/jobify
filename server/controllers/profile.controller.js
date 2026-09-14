@@ -13,6 +13,10 @@ const {
 } = require('../config/cloudinary');
 const { buildAIReadyPayload } = require('../utils/aiDataPrep');
 const { parseResumeBuffer } = require('../utils/resumeParser');
+const {
+  analyzeResumeWithOpenAI,
+  createResumeSourceHash,
+} = require('../utils/resumeAnalysis');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -237,6 +241,7 @@ const uploadResume = async (req, res) => {
       pageCount: parsedResume.pageCount,
       parser: parsedResume.parser,
       parsedAt: new Date(),
+      analysis: {},
     };
 
     profile.skills = mergeArrayByKey(
@@ -266,6 +271,65 @@ const uploadResume = async (req, res) => {
 
     if (error.message.includes('Unauthorized')) {
       return res.status(403).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: error.message || 'Internal Server Error' });
+  }
+};
+
+const getResumeAnalysis = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const profile = await Profile.findOne({ userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    ensureOwnership(profile.userId, userId);
+
+    const resumeText = profile.resume?.cleanedText || profile.resume?.extractedText || '';
+
+    if (!resumeText.trim()) {
+      return res.status(400).json({ message: 'Upload and parse a resume before requesting analysis' });
+    }
+
+    const sourceHash = createResumeSourceHash(resumeText);
+    const cachedAnalysis = profile.resume?.analysis;
+
+    if (cachedAnalysis?.sourceHash === sourceHash && cachedAnalysis.analyzedAt) {
+      return res.status(200).json({
+        message: 'Cached resume analysis fetched successfully',
+        cached: true,
+        analysis: cachedAnalysis,
+      });
+    }
+
+    const analysis = await analyzeResumeWithOpenAI(resumeText);
+
+    profile.resume.analysis = {
+      sourceHash,
+      analyzedAt: new Date(),
+      ...analysis,
+    };
+    await profile.save();
+
+    return res.status(200).json({
+      message: 'Resume analyzed successfully',
+      cached: false,
+      analysis: profile.resume.analysis,
+    });
+  } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
+
+    if (error.code === 'OPENAI_NOT_CONFIGURED') {
+      return res.status(503).json({ message: 'Resume analysis is not configured' });
+    }
+
+    if (error.code === 'OPENAI_REQUEST_FAILED' || error.code === 'OPENAI_EMPTY_RESPONSE' || error instanceof SyntaxError) {
+      return res.status(502).json({ message: 'Resume analysis provider returned an invalid response' });
     }
 
     return res.status(500).json({ message: error.message || 'Internal Server Error' });
@@ -314,5 +378,6 @@ module.exports = {
   getMyProfile,
   updateProfile,
   uploadResume,
+  getResumeAnalysis,
   getAIReadyProfileForJob,
 };
