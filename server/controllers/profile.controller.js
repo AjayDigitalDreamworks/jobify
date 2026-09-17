@@ -17,6 +17,7 @@ const {
   analyzeResumeWithOpenAI,
   createResumeSourceHash,
 } = require('../utils/resumeAnalysis');
+const { calculateProfileScore } = require('../utils/profileScore');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -136,6 +137,30 @@ const getMyProfile = async (req, res) => {
     if (error.message.includes('Unauthorized')) {
       return res.status(403).json({ message: error.message });
     }
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getProfileScore = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const profile = await Profile.findOne({ userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    ensureOwnership(profile.userId, userId);
+
+    return res.status(200).json({
+      message: 'Profile score calculated successfully',
+      score: calculateProfileScore(profile),
+    });
+  } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
+
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -376,6 +401,7 @@ const getAIReadyProfileForJob = async (req, res) => {
 module.exports = {
   createProfile,
   getMyProfile,
+  getProfileScore,
   updateProfile,
   uploadResume,
   getResumeAnalysis,
