@@ -45,6 +45,7 @@ const SKILLS_DATABASE = [
 ];
 
 const SKILL_ALIASES = {
+  React: ['React.js', 'ReactJS'],
   'Node.js': ['Node', 'NodeJS'],
   MongoDB: ['Mongo'],
   JavaScript: ['JS'],
