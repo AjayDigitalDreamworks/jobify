@@ -11,6 +11,7 @@ const router = express.Router();
 router.post('/create', authMiddleware, validate(profileCreateSchema), profileController.createProfile);
 router.get('/me', authMiddleware, profileController.getMyProfile);
 router.get('/score', authMiddleware, profileController.getProfileScore);
+router.get('/recommendations', authMiddleware, profileController.getJobRecommendations);
 router.get('/resume-analysis', authMiddleware, profileController.getResumeAnalysis);
 router.get('/ai-ready/:jobId', authMiddleware, profileController.getAIReadyProfileForJob);
 router.put('/update', authMiddleware, validate(profileUpdateSchema), profileController.updateProfile);
