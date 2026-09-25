@@ -18,6 +18,8 @@ const {
   createResumeSourceHash,
 } = require('../utils/resumeAnalysis');
 const { calculateProfileScore } = require('../utils/profileScore');
+const { calculateJobMatch } = require('../utils/matchingEngine');
+const Application = require('../models/application.model');
 
 const normalizeKey = (value = '') => value.toString().trim().toLowerCase(); //normalizeKey(" React ") => Output: "react"
 
@@ -162,6 +164,63 @@ const getProfileScore = async (req, res) => {
     }
 
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getJobRecommendations = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const requestedLimit = Number.parseInt(req.query.limit, 10);
+    const limit = Number.isNaN(requestedLimit) ? 10 : Math.min(Math.max(requestedLimit, 1), 50);
+
+    const profile = await Profile.findOne({ userId });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    ensureOwnership(profile.userId, userId);
+
+    const applications = await Application.find({ applicant: userId }).select('job');
+    const appliedJobIds = applications.map((application) => application.job);
+    const appliedJobIdSet = new Set(appliedJobIds.map((jobId) => jobId.toString()));
+    const jobs = await Job.find({ isActive: true }).select(
+      'title company description location employmentType workMode skillsRequired extractedSkills experienceLevel'
+    );
+
+    const recommendations = jobs
+      .filter((job) => !appliedJobIdSet.has(job._id.toString()))
+      .map((job) => {
+        const match = calculateJobMatch({ profile, job });
+
+        return {
+          _id: job._id,
+          title: job.title,
+          company: job.company,
+          location: job.location,
+          employmentType: job.employmentType,
+          workMode: job.workMode,
+          experienceLevel: job.experienceLevel,
+          matchPercentage: match.matchPercentage,
+          matchedSkills: match.matchedSkills,
+          missingSkills: match.missingSkills,
+        };
+      })
+      .sort((firstJob, secondJob) => (
+        secondJob.matchPercentage - firstJob.matchPercentage || firstJob.title.localeCompare(secondJob.title)
+      ))
+      .slice(0, limit);
+
+    return res.status(200).json({
+      message: 'Job recommendations generated successfully',
+      recommendations,
+    });
+  } catch (error) {
+    if (error.message.includes('Unauthorized')) {
+      return res.status(403).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: error.message || 'Internal Server Error' });
   }
 };
 
@@ -402,6 +461,7 @@ module.exports = {
   createProfile,
   getMyProfile,
   getProfileScore,
+  getJobRecommendations,
   updateProfile,
   uploadResume,
   getResumeAnalysis,
