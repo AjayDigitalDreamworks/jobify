@@ -85,6 +85,21 @@ const calculateSkillGap = ({ candidateSkills = [], requiredSkills = [] } = {}) =
   };
 };
 
+const buildMatchExplanation = ({ matchPercentage, matchedSkills, missingSkills, totalRequiredSkills }) => {
+  const requiredSkillLabel = totalRequiredSkills === 1 ? 'required skill' : 'required skills';
+  const matchedSkillLabel = matchedSkills.length === 1 ? 'skill' : 'skills';
+  const missingSkillLabel = missingSkills.length === 1 ? 'skill' : 'skills';
+
+  return {
+    matchScore: matchPercentage,
+    matchedSkills,
+    missingSkills,
+    summary: missingSkills.length === 0
+      ? `Matches all ${totalRequiredSkills} ${requiredSkillLabel}.`
+      : `Matches ${matchedSkills.length} ${matchedSkillLabel} and is missing ${missingSkills.length} ${missingSkillLabel}.`,
+  };
+};
+
 const calculateJobMatch = ({ profile, job } = {}) => {
   const candidateSkills = getCandidateSkills(profile);
   const requiredSkills = getRequiredJobSkills(job);
@@ -96,11 +111,13 @@ const calculateJobMatch = ({ profile, job } = {}) => {
     requiredSkills,
     ...skillMatch,
     skillGap,
+    explanation: buildMatchExplanation(skillMatch),
   };
 };
 
 module.exports = {
   calculateJobMatch,
+  buildMatchExplanation,
   calculateSkillGap,
   calculateSkillMatch,
   canonicalizeSkill,
