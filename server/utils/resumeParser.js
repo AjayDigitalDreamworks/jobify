@@ -49,7 +49,8 @@ const extractSkillsFromText = (text = '', skillList = SKILLS_DATABASE) => {
 
   return matchedSkills
     .sort((left, right) => left.index - right.index)
-    .map((item) => item.skill);
+    .map((item) => item.skill)
+    .filter((skill, index, skills) => skills.indexOf(skill) === index);
 };
 
 const parseResumeBuffer = async (buffer, parser = pdfParse) => {
