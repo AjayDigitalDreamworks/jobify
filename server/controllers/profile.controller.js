@@ -204,6 +204,7 @@ const getJobRecommendations = async (req, res) => {
           matchPercentage: match.matchPercentage,
           matchedSkills: match.matchedSkills,
           missingSkills: match.missingSkills,
+          explanation: match.explanation,
         };
       })
       .sort((firstJob, secondJob) => (
