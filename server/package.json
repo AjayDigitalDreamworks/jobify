@@ -11,7 +11,8 @@
     "job-skills:test": "node scripts/test-job-skill-extractor.js",
     "matching:test": "node scripts/test-matching-engine.js",
     "application:test": "node scripts/test-application-workflow.js",
-    "resume:test": "node scripts/test-resume-parser.js"
+    "resume:test": "node scripts/test-resume-parser.js",
+    "ai-stability:test": "node scripts/test-ai-matching-stability.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
