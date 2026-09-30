@@ -12,7 +12,9 @@
     "matching:test": "node scripts/test-matching-engine.js",
     "application:test": "node scripts/test-application-workflow.js",
     "resume:test": "node scripts/test-resume-parser.js",
-    "ai-stability:test": "node scripts/test-ai-matching-stability.js"
+    "ai-stability:test": "node scripts/test-ai-matching-stability.js",
+    "dashboard:test": "node scripts/test-dashboard-system.js",
+    "phase6:test": "node scripts/test-phase6-e2e.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
